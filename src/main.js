@@ -6,7 +6,7 @@ const express = require('express');
 const pool = require('../methods/database.js');
 const { TELEGRAM, QUERIES } = require('../constants.js');
 const callJoin = require('./helpers/callJoinFunction.js');
-const { pythonHandler } = require('./helpers/pythonUtils.js');
+const pythonHandler = require('./helpers/pythonUtils.js');
 const eventPrint = require('./helpers/eventPrintFunction.js');
 
 const { add_account, parse_account, list_accounts, remove_account, swap_account, init_tops, uninit_tops, list, remove_channels } = require('./helpers/botOnFunctions.js');
@@ -139,4 +139,4 @@ const Main = async () => {
     botWorking = true;
 }
 
-export default Main;
+module.exports = Main;

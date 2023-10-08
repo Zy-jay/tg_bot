@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 const pool = require('../../methods/database.js');
 const { exec } = require('child_process');
 
-export async function getTokenData(poolAddress) {
+async function getTokenData(poolAddress) {
 
     // chaniID doesn't matter in this request
     const pair = await fetch(`https://dex-api-production.up.railway.app/v1/dex/pair/search/${poolAddress}?chainId=1`)
@@ -36,7 +36,7 @@ export async function getTokenData(poolAddress) {
     return tokenData || pair;
 }
 
-export function reloadScript() {
+function reloadScript() {
     exec(`pm2 restart ${TOOLS.PM2_NAME}`, (error, stdout, stderr) => {
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
@@ -46,7 +46,7 @@ export function reloadScript() {
     });
 }
 
-export async function swapAccount(idToSet, ctx) {
+async function swapAccount(idToSet, ctx) {
     await pool.query(QUERIES.updateBackupBotCurrentStatusToFalse, [TELEGRAM.BOT_NUMBER]);
     await pool.query(QUERIES.updateBackupBotCurrentStatusToTrue, [idToSet, TELEGRAM.BOT_NUMBER]);
 
@@ -57,7 +57,7 @@ export async function swapAccount(idToSet, ctx) {
     reloadScript();
 }
 
-export async function swapToNextAccount(bot) {
+async function swapToNextAccount(bot) {
     const currentAccount = (await pool.query(QUERIES.getBackupBotsByIsCurrentAndBotNumber, [true, TELEGRAM.BOT_NUMBER])).rows[0];
     const nextAccounts = (await pool.query(QUERIES.getBackupBotsByIdAndBotNumber, [currentAccount.id, TELEGRAM.BOT_NUMBER])).rows;
     for (const admin of JSON.parse(TELEGRAM.ADMINS)) {
@@ -75,4 +75,11 @@ export async function swapToNextAccount(bot) {
     if (nextAccounts[0]) {
         return swapAccount(nextAccounts[0].id);
     }
+}
+
+module.exports = {
+    getTokenData,
+    reloadScript,
+    swapAccount,
+    swapToNextAccount
 }

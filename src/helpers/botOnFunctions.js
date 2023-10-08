@@ -5,7 +5,7 @@ const pool = require('../../methods/database.js');
 const { TELEGRAM, QUERIES } = require('../../constants.js');
 const { swapAccount } = require('./utils.js');
 
-export const add_account = async (ctx) => {
+const add_account = async (ctx) => {
     try {
         const inputData = ctx.message.text.replace('/add_account\n', '').split('\n');
         await pool.query(
@@ -18,7 +18,7 @@ export const add_account = async (ctx) => {
     }
 }
 
-export const parse_account = async (ctx, client) => {
+const parse_account = async (ctx, client) => {
     const allDialogs = await client.getDialogs();
     const allChannels = allDialogs.map(e => ({
         title: e?.entity?.title || 'Channel',
@@ -60,7 +60,7 @@ export const parse_account = async (ctx, client) => {
     await ctx.reply('Done!');
 }
 
-export const list_accounts = async (ctx) => {
+const list_accounts = async (ctx) => {
     try {
         const accounts = (await pool.query(QUERIES.getBackupBotsByBotNumber, [TELEGRAM.BOT_NUMBER])).rows;
         await ctx.reply(accounts.map(e =>
@@ -85,7 +85,7 @@ export const list_accounts = async (ctx) => {
     }
 }
 
-export const remove_account = async (ctx) => {
+const remove_account = async (ctx) => {
     try {
         const idToRemove = parseInt(ctx.message.text.replace('/remove_account ', ''), 10);
         const isCurrent = (await pool.query(QUERIES.getBackupBotByIdAndBotNumber, [idToRemove, TELEGRAM.BOT_NUMBER])).rows[0]?.is_current;
@@ -101,7 +101,7 @@ export const remove_account = async (ctx) => {
     }
 }
 
-export const swap_account = async (ctx) => {
+const swap_account = async (ctx) => {
     try {
         const idToSet = parseInt(ctx.message.text.replace('/swap_account ', ''), 10);
         await swapAccount(idToSet, ctx);
@@ -110,7 +110,7 @@ export const swap_account = async (ctx) => {
     }
 }
 
-export const init_tops = async (ctx, bot) => {
+const init_tops = async (ctx, bot) => {
     try {
         await ctx.reply('wait...');
         const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
@@ -151,7 +151,7 @@ export const init_tops = async (ctx, bot) => {
     }
 }
 
-export const uninit_tops = async (ctx, bot) => {
+const uninit_tops = async (ctx, bot) => {
     const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
     if (currentTopsMessage) {
         try {
@@ -166,7 +166,7 @@ export const uninit_tops = async (ctx, bot) => {
     await ctx.reply('Done!');
 }
 
-export const list = async (ctx) => {
+const list = async (ctx) => {
     try {
         const allChannels = (await pool.query(QUERIES.getChannelsByBotNumber, [TELEGRAM.BOT_NUMBER])).rows;
         const messageString = allChannels.map(e => e.link).filter(e => e).join('\n') || 'No channels';
@@ -185,7 +185,7 @@ export const list = async (ctx) => {
     }
 }
 
-export const remove_channels = async (ctx) => {
+const remove_channels = async (ctx) => {
     try {
         const channels = ctx.message.text.replace('/remove_channels\n', '').split('\n');
         console.log('call');
@@ -279,4 +279,16 @@ async function getROITops() {
     const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 5);
 
     return topROI;
+}
+
+module.exports = {
+    add_account,
+    parse_account,
+    list_accounts,
+    remove_account,
+    swap_account,
+    init_tops,
+    uninit_tops,
+    list,
+    remove_channels
 }

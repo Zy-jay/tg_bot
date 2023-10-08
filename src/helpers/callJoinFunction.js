@@ -180,4 +180,4 @@ async function callJoin(ctx, botID, customChannels, client) {
     }
 }
 
-export default callJoin;
+module.exports = callJoin;

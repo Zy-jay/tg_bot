@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const { getTotalText, getFirstCallText, getUpdateText, getTrendingText, getPreCallText } = require('../../methods/texts.js');
+const { getTotalText, getFirstCallText, getUpdateText, getTrendingText, getPreCallText } = require('../../methods/texts_ru.js');
 const pool = require('../../methods/database.js');
 const { TELEGRAM, TOOLS, QUERIES } = require('../../constants.js');
 const { getTokenData } = require('./utils.js');
@@ -336,4 +336,4 @@ async function eventPrint(event) {
     }
 }
 
-export default eventPrint;
+module.exports = eventPrint

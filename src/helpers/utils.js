@@ -1,0 +1,78 @@
+const { TELEGRAM, TOOLS, QUERIES } = require('../../constants.js');
+
+const fetch = require('node-fetch');
+const pool = require('../../methods/database.js');
+const { exec } = require('child_process');
+
+export async function getTokenData(poolAddress) {
+
+    // chaniID doesn't matter in this request
+    const pair = await fetch(`https://dex-api-production.up.railway.app/v1/dex/pair/search/${poolAddress}?chainId=1`)
+        .then(r => r.json())
+        .then(r => r?.pairs?.data[0] || r?.pairs?.data)
+        .catch((error) => {
+            console.log(error);
+            return null;
+        });
+
+    console.log(pair);
+
+    if (!pair) {
+        console.log('no pairs found');
+        return null;
+    }
+
+    const tokenData = await fetch(
+        `https://dex-api-production.up.railway.app/v1/dex/pair/poolAddress/${pair?.address}?chainId=${pair?.chainId}`
+    )
+        .then(r => r.json())
+        .then(r => r?.pairs?.data[0] || r?.pairs?.data)
+        .catch((error) => {
+            console.log(error);
+            return null;
+        });
+
+
+    return tokenData || pair;
+}
+
+export function reloadScript() {
+    exec(`pm2 restart ${TOOLS.PM2_NAME}`, (error, stdout, stderr) => {
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        if (error !== null) {
+            console.log('exec error: ' + error);
+        }
+    });
+}
+
+export async function swapAccount(idToSet, ctx) {
+    await pool.query(QUERIES.updateBackupBotCurrentStatusToFalse, [TELEGRAM.BOT_NUMBER]);
+    await pool.query(QUERIES.updateBackupBotCurrentStatusToTrue, [idToSet, TELEGRAM.BOT_NUMBER]);
+
+    if (ctx) {
+        ctx.reply('Done! Bot will be restarted in 2 seconds');
+    }
+
+    reloadScript();
+}
+
+export async function swapToNextAccount(bot) {
+    const currentAccount = (await pool.query(QUERIES.getBackupBotsByIsCurrentAndBotNumber, [true, TELEGRAM.BOT_NUMBER])).rows[0];
+    const nextAccounts = (await pool.query(QUERIES.getBackupBotsByIdAndBotNumber, [currentAccount.id, TELEGRAM.BOT_NUMBER])).rows;
+    for (const admin of JSON.parse(TELEGRAM.ADMINS)) {
+        try {
+            if (nextAccounts[0]) {
+                await bot.telegram.sendMessage(admin, `Bot #${currentAccount.id} banned, switching to bot #${nextAccounts[0].id}`);
+            } else {
+                await bot.telegram.sendMessage(admin, `Bot #${currentAccount.id} banned, AND IT WAS LAST BOT !!!`);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    if (nextAccounts[0]) {
+        return swapAccount(nextAccounts[0].id);
+    }
+}

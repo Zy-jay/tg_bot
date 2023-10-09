@@ -2,10 +2,10 @@ const fetch = require('node-fetch');
 
 const { getTotalText, getFirstCallText, getUpdateText, getTrendingText, getPreCallText } = require('../../methods/texts_ru');
 const pool = require('../../methods/database.js');
-const { TELEGRAM, TOOLS, QUERIES } = require('../../constants.js');
+const { TELEGRAM, TOOLS, QUERIES } = require('../../constants');
 const { getTokenData } = require('./utils.js');
 
-async function eventPrint(event) {
+async function eventPrint(event, bot) {
     try {
         const message = event.message;
         const channelsInBase = (await pool.query(QUERIES.getChannelsInBaseByBotNumber, [TELEGRAM.BOT_NUMBER])).rows.map(row => parseInt(row.channel_id, 10));

@@ -52,7 +52,7 @@ const Main = async () => {
             try {
                 await eventPrint({
                     message: event
-                });
+                }, bot);
             } catch (error) {
                 console.log(error);
             }

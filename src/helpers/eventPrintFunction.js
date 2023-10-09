@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const { getTotalText, getFirstCallText, getUpdateText, getTrendingText, getPreCallText } = require('../../methods/texts_ru.js');
+const { getTotalText, getFirstCallText, getUpdateText, getTrendingText, getPreCallText } = require('../../methods/texts_ru');
 const pool = require('../../methods/database.js');
 const { TELEGRAM, TOOLS, QUERIES } = require('../../constants.js');
 const { getTokenData } = require('./utils.js');

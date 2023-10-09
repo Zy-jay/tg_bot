@@ -4,6 +4,7 @@ const { getTotalText, getFirstCallText, getUpdateText, getTrendingText, getPreCa
 const pool = require('../../methods/database.js');
 const { TELEGRAM, TOOLS, QUERIES } = require('../../constants');
 const { getTokenData } = require('./utils.js');
+const { getTops, getROITops } = require('./botOnFunctions');
 
 async function eventPrint(event, bot) {
     try {
@@ -142,7 +143,7 @@ async function eventPrint(event, bot) {
             )).rows[0];
 
             console.log('already called from this channel:', alreadyCalledFromThisChannel || false);
-            if (alreadyCalledFromThisChannel) continue;
+            // if (alreadyCalledFromThisChannel) continue;
 
 
             const {

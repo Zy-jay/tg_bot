@@ -290,5 +290,7 @@ module.exports = {
     init_tops,
     uninit_tops,
     list,
-    remove_channels
+    remove_channels,
+    getTops,
+    getROITops
 }

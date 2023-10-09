@@ -143,7 +143,7 @@ async function eventPrint(event, bot) {
             )).rows[0];
 
             console.log('already called from this channel:', alreadyCalledFromThisChannel || false);
-            // if (alreadyCalledFromThisChannel) continue;
+            if (alreadyCalledFromThisChannel) continue;
 
 
             const {

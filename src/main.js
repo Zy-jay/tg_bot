@@ -67,7 +67,7 @@ const Main = async () => {
 
     app.listen(3010);
 
-    let python = pythonHandler();
+    let python = pythonHandler(currentBotData);
 
     async function killPython() {
         python.kill();
@@ -77,7 +77,7 @@ const Main = async () => {
 
     async function reloadPython() {
         await client.destroy();
-        python = pythonHandler();
+        python = pythonHandler(currentBotData);
     }
 
     bot.on('message', async (ctx) => {

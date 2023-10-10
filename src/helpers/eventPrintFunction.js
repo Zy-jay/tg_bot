@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const { Markup } = require('telegraf');
 
 const { getTotalText, getFirstCallText, getUpdateText, getTrendingText, getPreCallText } = require('../../methods/texts_ru');
 const pool = require('../../methods/database.js');

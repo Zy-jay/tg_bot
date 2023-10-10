@@ -1,6 +1,6 @@
 const { Markup } = require('telegraf');
 
-const { getTrendingText } = require('../../methods/texts.js');
+const { getTrendingText } = require('../../methods/texts_ru');
 const pool = require('../../methods/database.js');
 const { TELEGRAM, QUERIES } = require('../../constants.js');
 const { swapAccount } = require('./utils.js');

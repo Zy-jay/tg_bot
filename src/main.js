@@ -104,7 +104,7 @@ const Main = async () => {
             }
         ).catch(async (e) => {
             console.log(e.message);
-            if (e.message == "message to edit not found") {
+            if (e.message == "400: Bad Request: message to edit not found") {
                 try {
                     await ctx.reply('wait...');
                     const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
@@ -137,7 +137,7 @@ const Main = async () => {
 
                     await bot.telegram.pinChatMessage(TELEGRAM.CHANNEL, messageData.message_id).catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
 
-                    await pool.query(QUERIES.updateGeneralTopsMessageId, [messageData.message_id]);
+                    await pool.query(`UPDATE general SET tops_message_id = $1 WHERE id = 1`, [messageData.message_id]);
 
                     await ctx.reply('Done!');
                 } catch (error) {

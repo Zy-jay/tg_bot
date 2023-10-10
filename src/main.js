@@ -91,7 +91,45 @@ const Main = async () => {
 
         if (ctx?.message?.text === '/parse_account') {
             await killPython();
-            await parse_account(ctx, client);
+            const allDialogs = await client.getDialogs();
+            const allChannels = allDialogs.map(e => ({
+                title: e?.entity?.title || 'Channel',
+                id: parseInt(e?.entity?.id, 10),
+                username: e?.entity?.username || parseInt(e?.entity?.id, 10),
+            }));
+
+            // select all channels from all bots to prevent duplicates
+            const allChannelsInBase = (await pool.query(QUERIES.getChannelsInfo)).rows.map(row => parseInt(row.channel_id, 10));
+
+            const filteredChannels = allChannels.filter(e => !allChannelsInBase.includes(e.id));
+            console.log(filteredChannels);
+
+            await ctx.reply('wait...');
+            for (const channel of filteredChannels) {
+                console.log('added', channel);
+                await pool.query(QUERIES.deleteChannelByChannelIdAndBotNumber, [channel?.id?.toString(), TELEGRAM.BOT_NUMBER]);
+
+                await pool.query(QUERIES.insertChannel, [channel?.id?.toString(), `https://t.me/${channel?.username}`, TELEGRAM.BOT_NUMBER]);
+
+
+                await pool.query(
+                    QUERIES.deleteChannelInfoByChannelId,
+                    [channel?.id?.toString()]
+                );
+
+                await pool.query(
+                    QUERIES.insertChannelInfo,
+                    [
+                        channel?.id?.toString(),
+                        channel?.username,
+                        channel?.title,
+                        +new Date() + 1000 * 60 * 60 * 24 * 7
+                    ]
+                );
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            await ctx.reply('Done!');
             reloadPython();
         }
 

@@ -1,6 +1,7 @@
 const { TelegramClient } = require('telegram');
 const { StringSession } = require('telegram/sessions');
 const { Telegraf } = require('telegraf');
+const { Markup } = require('telegraf');
 const express = require('express');
 
 const pool = require('../methods/database.js');
@@ -9,6 +10,7 @@ const callJoin = require('./helpers/callJoinFunction.js');
 const pythonHandler = require('./helpers/pythonUtils.js');
 const eventPrint = require('./helpers/eventPrintFunction.js');
 
+const { getTrendingText } = require('../methods/texts_ru.js');
 const { add_account, list_accounts, remove_account, swap_account, uninit_tops, list, remove_channels, getROITops, getTops } = require('./helpers/botOnFunctions.js');
 
 const app = express();
@@ -86,10 +88,10 @@ const Main = async () => {
         const ROITops = await getROITops();
         console.log('got tops');
 
-        const topsMessage = (await pool.query(`SELECT * FROM general`)).rows[0]?.tops_message_id;
+        const topsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
 
         await bot.telegram.editMessageText(
-            process.env.TELEGRAM_CHANNEL,
+            TELEGRAM.CHANNEL,
             topsMessage,
             undefined,
             getTrendingText(tops, ROITops),

@@ -89,7 +89,7 @@ const Main = async () => {
         console.log('got tops');
 
         const topsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
-
+        console.log('tops messages:', topsMessage);
         await bot.telegram.editMessageText(
             TELEGRAM.CHANNEL,
             topsMessage,

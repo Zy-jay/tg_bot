@@ -89,62 +89,59 @@ const Main = async () => {
         console.log('got tops');
 
         const topsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
-        console.log('tops messages:', topsMessage);
-        await bot.telegram.editMessageText(
-            TELEGRAM.CHANNEL,
-            topsMessage,
-            undefined,
-            getTrendingText(tops, ROITops),
-            {
-                parse_mode: 'HTML',
-                disable_web_page_preview: true,
-                ...Markup.inlineKeyboard([
-                    Markup.button.callback('🟢Live Trending🟢', '_blank')
-                ])
-            }
-        ).catch(async (e) => {
-            console.log(e.message);
-            if (e.message == "400: Bad Request: message to edit not found") {
-                try {
-                    await ctx.reply('wait...');
-                    const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
-                    console.log('tops_message:', currentTopsMessage);
-                    if (currentTopsMessage) {
-                        try {
-                            await bot.telegram.deleteMessage(TELEGRAM.CHANNEL, currentTopsMessage)
-                                .catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
-                        } catch (error) {
-                            console.log('----------HANDLED ERROR----------');
-                            console.log(error);
-                            console.log('----------HANDLED ERROR----------');
-                        }
+        if (topsMessage) {
+            await bot.telegram.editMessageText(
+                TELEGRAM.CHANNEL,
+                topsMessage,
+                undefined,
+                getTrendingText(tops, ROITops),
+                {
+                    parse_mode: 'HTML',
+                    disable_web_page_preview: true,
+                    ...Markup.inlineKeyboard([
+                        Markup.button.callback('🟢Live Trending🟢', '_blank')
+                    ])
+                }).catch(err => console.log(err));
+        } else {
+            try {
+                await ctx.reply('wait...');
+                const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
+                console.log('tops_message:', currentTopsMessage);
+                if (currentTopsMessage) {
+                    try {
+                        await bot.telegram.deleteMessage(TELEGRAM.CHANNEL, currentTopsMessage)
+                            .catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
+                    } catch (error) {
+                        console.log('----------HANDLED ERROR----------');
+                        console.log(error);
+                        console.log('----------HANDLED ERROR----------');
                     }
-                    console.log('getting tops...');
-                    const tops = await getTops();
-                    const ROITops = await getROITops();
-                    console.log('got tops');
-                    const messageData = await bot.telegram.sendMessage(
-                        TELEGRAM.CHANNEL,
-                        getTrendingText(tops, ROITops),
-                        {
-                            parse_mode: 'HTML',
-                            disable_web_page_preview: true,
-                            ...Markup.inlineKeyboard([
-                                Markup.button.callback('🟢Live Trending🟢', '_blank')
-                            ])
-                        }
-                    ).catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
-
-                    await bot.telegram.pinChatMessage(TELEGRAM.CHANNEL, messageData.message_id).catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
-
-                    await pool.query(`UPDATE general SET tops_message_id = $1 WHERE id = 1`, [messageData.message_id]);
-
-                    await ctx.reply('Done!');
-                } catch (error) {
-                    console.log(error);
                 }
+                console.log('getting tops...');
+                const tops = await getTops();
+                const ROITops = await getROITops();
+                console.log('got tops');
+                const messageData = await bot.telegram.sendMessage(
+                    TELEGRAM.CHANNEL,
+                    getTrendingText(tops, ROITops),
+                    {
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true,
+                        ...Markup.inlineKeyboard([
+                            Markup.button.callback('🟢Live Trending🟢', '_blank')
+                        ])
+                    }
+                ).catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
+
+                await bot.telegram.pinChatMessage(TELEGRAM.CHANNEL, messageData.message_id).catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
+
+                await pool.query(`UPDATE general SET tops_message_id = $1 WHERE id = 1`, [messageData.message_id]);
+
+                await ctx.reply('Done!');
+            } catch (error) {
+                console.log(error);
             }
-        });
+        }
     }
 
     setInterval(updateTops, 3 * 60 * 1000);

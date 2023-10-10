@@ -15,6 +15,7 @@ async function eventPrint(event, bot) {
         console.log(`[${new Date()}] got message from channel:`, channelID);
 
         if (!channelsInBase.includes(channelID)) {
+            console.log('channels in base: ', channelsInBase);
             return console.log('channel is not in base');
         }
 

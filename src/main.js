@@ -9,7 +9,7 @@ const callJoin = require('./helpers/callJoinFunction.js');
 const pythonHandler = require('./helpers/pythonUtils.js');
 const eventPrint = require('./helpers/eventPrintFunction.js');
 
-const { add_account, parse_account, list_accounts, remove_account, swap_account, init_tops, uninit_tops, list, remove_channels } = require('./helpers/botOnFunctions.js');
+const { add_account, list_accounts, remove_account, swap_account, uninit_tops, list, remove_channels, getROITops, getTops } = require('./helpers/botOnFunctions.js');
 
 const app = express();
 
@@ -148,7 +148,44 @@ const Main = async () => {
 
 
         if (ctx?.message?.text === '/init_tops') {
-            await init_tops(ctx, bot);
+            try {
+                await ctx.reply('wait...');
+                const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
+                console.log('tops_message:', currentTopsMessage);
+                if (currentTopsMessage) {
+                    try {
+                        await bot.telegram.deleteMessage(TELEGRAM.CHANNEL, currentTopsMessage)
+                            .catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
+                    } catch (error) {
+                        console.log('----------HANDLED ERROR----------');
+                        console.log(error);
+                        console.log('----------HANDLED ERROR----------');
+                    }
+                }
+                console.log('getting tops...');
+                const tops = await getTops();
+                const ROITops = await getROITops();
+                console.log('got tops');
+                const messageData = await bot.telegram.sendMessage(
+                    TELEGRAM.CHANNEL,
+                    getTrendingText(tops, ROITops),
+                    {
+                        parse_mode: 'HTML',
+                        disable_web_page_preview: true,
+                        ...Markup.inlineKeyboard([
+                            Markup.button.callback('🟢Live Trending🟢', '_blank')
+                        ])
+                    }
+                ).catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
+
+                await bot.telegram.pinChatMessage(TELEGRAM.CHANNEL, messageData.message_id).catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
+
+                await pool.query(QUERIES.updateGeneralTopsMessageId, [messageData.message_id]);
+
+                await ctx.reply('Done!');
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         if (ctx?.message?.text === '/uninit_tops') {

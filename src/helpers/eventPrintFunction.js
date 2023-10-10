@@ -30,7 +30,7 @@ async function eventPrint(event, bot) {
         console.log('matches:', matches);
 
         for (const iterator of matches) {
-
+            if (iterator == "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2") continue;
             const tokenData = await (async () => {
 
                 // try to get ETH pair

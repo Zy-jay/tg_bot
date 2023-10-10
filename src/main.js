@@ -102,7 +102,7 @@ const Main = async () => {
                     Markup.button.callback('🟢Live Trending🟢', '_blank')
                 ])
             }
-        ).catch(() => { });
+        ).catch((err) => { console.log(err)});
     }
 
     setInterval(updateTops, 3 * 60 * 1000);

@@ -80,6 +80,31 @@ const Main = async () => {
         python = pythonHandler(currentBotData);
     }
 
+    async function updateTops() {
+        console.log('getting tops...');
+        const tops = await getTops();
+        const ROITops = await getROITops();
+        console.log('got tops');
+
+        const topsMessage = (await pool.query(`SELECT * FROM general`)).rows[0]?.tops_message_id;
+
+        await bot.telegram.editMessageText(
+            process.env.TELEGRAM_CHANNEL,
+            topsMessage,
+            undefined,
+            getTrendingText(tops, ROITops),
+            {
+                parse_mode: 'HTML',
+                disable_web_page_preview: true,
+                ...Markup.inlineKeyboard([
+                    Markup.button.callback('🟢Live Trending🟢', '_blank')
+                ])
+            }
+        ).catch(() => { });
+    }
+
+    setInterval(updateTops, 3 * 60 * 1000);
+
     bot.on('message', async (ctx) => {
         console.log(botWorking);
         if (!JSON.parse(TELEGRAM.ADMINS).includes(ctx.message.from.id) || !botWorking) return;

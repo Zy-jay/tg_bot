@@ -276,7 +276,7 @@ async function getROITops() {
 
     const flatRois = ROIs.flat(Infinity).filter(e => e.ROI !== Infinity);
 
-    const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 5);
+    const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
 
     return topROI;
 }

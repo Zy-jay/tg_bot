@@ -107,7 +107,7 @@ async function eventPrint(event, bot) {
                 delete tokenInfo.market_cap;
             }
 
-            if (!tokenInfo?.address) continue;
+            if (!tokenInfo?.address || tokenInfo?.key_name === '$WETH') continue;
 
             const pairInfo = await fetch(`https://api.dextools.io/v1/pair?chain=${tokenInfo.chain}&address=${tokenInfo?.pairs?.[0]?.address}`, {
                 headers: {
@@ -311,26 +311,26 @@ async function eventPrint(event, bot) {
                 );
                 console.log('updated max cap:', parseInt(tokenInfo.market_cap, 10));
             }
-            console.log('getting tops...');
-            const tops = await getTops();
-            const ROITops = await getROITops();
-            console.log('got tops');
+            // console.log('getting tops...');
+            // const tops = await getTops();
+            // const ROITops = await getROITops();
+            // console.log('got tops');
 
-            const topsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
+            // const topsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
 
-            await bot.telegram.editMessageText(
-                TELEGRAM.CHANNEL,
-                topsMessage,
-                undefined,
-                getTrendingText(tops, ROITops),
-                {
-                    parse_mode: 'HTML',
-                    disable_web_page_preview: true,
-                    ...Markup.inlineKeyboard([
-                        Markup.button.callback('🟢Live Trending🟢', '_blank')
-                    ])
-                }
-            ).catch(() => { });
+            // await bot.telegram.editMessageText(
+            //     TELEGRAM.CHANNEL,
+            //     topsMessage,
+            //     undefined,
+            //     getTrendingText(tops, ROITops),
+            //     {
+            //         parse_mode: 'HTML',
+            //         disable_web_page_preview: true,
+            //         ...Markup.inlineKeyboard([
+            //             Markup.button.callback('🟢Live Trending🟢', '_blank')
+            //         ])
+            //     }
+            // ).catch(() => { });
         }
     } catch (error) {
         console.log('CATCH BLOCK - WARNING');

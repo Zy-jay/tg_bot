@@ -20,8 +20,41 @@ function escapeHtmlEntities(userText) {
 }
 
 function addNumberSeparators(num) {
-    const formatted = parseInt(num).toLocaleString('ru-RU');
-    return formatted.replace(/,/g, '.');
+    // const formatted = parseInt(num).toLocaleString('en-US');
+    // return formatted.replace(/,/g, '.');
+
+    const target = parseInt(num);
+    const amountSign = (() => {
+        switch (true) {
+            case target >= 1000000000:
+                return 'B';
+            case target >= 1000000:
+                return 'M';
+            case target >= 1000:
+                return 'K';
+            default:
+                return '';
+        }
+    })(); 
+
+    if (target >= 1000000000) {
+        const formatted = (target / 1000000000).toFixed(1);
+        return formatted.replace(/\.0$/, '') + amountSign;
+
+    } else if (target >= 1000000) {
+        const formatted = (target / 1000000).toFixed(1);
+        return formatted.replace(/\.0$/, '') + amountSign;
+
+    } else if (target >= 100000) {
+        const formatted = (target / 1000).toFixed(0);
+        return formatted.replace(/\.0$/, '') + amountSign;
+
+    } else if (target >= 1000) {
+        const formatted = (target / 1000).toFixed(1);
+        return formatted.replace(/\.0$/, '') + amountSign;
+    }
+
+    return target.toString();
 }
 function formatTotal(data) {
 
@@ -163,9 +196,9 @@ ${tops[0] ? tops.map((e, i) => (
 
 <b>🟢Top Calls Channels (Max ROI Daily)</b> 
 
-${ROITops[0] ? ROITops.slice(0, 5).map((e, i) => (
-            `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(e.link)}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${TELEGRAM.CHANNEL.split('@')[1]}/${e.total_message_id}">Всего запросов (${escapeHtmlEntities(e.key_name)})</a> <b>X${parseFloat(e.ROI.toFixed(2))}</b> 🔹\n`
-        )).join('') : '[ там пока ничего нет ]'}
+${ROITops[0] ? ROITops.slice(0, 10).map((e, i) => (
+    `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(e.link)}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${process.env.TELEGRAM_CHANNEL.split('@')[1]}/${e.total_message_id}">Total Calls (${escapeHtmlEntities(e.key_name)})</a> <b>X${parseFloat(e.ROI.toFixed(2))}</b> 🔹\n`
+)).join('') : '[ тут пока ничего нет ]'}
 
 <b>(За последние 24 часа)</b>
 

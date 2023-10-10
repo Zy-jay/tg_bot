@@ -1,3 +1,5 @@
+const { TELEGRAM } = require('../constants');
+
 function formatDateToUTC(timestamp) {
     const date = new Date(parseInt(timestamp, 10));
     const options = {
@@ -18,8 +20,41 @@ function escapeHtmlEntities(userText) {
 }
 
 function addNumberSeparators(num) {
-    const formatted = parseInt(num).toLocaleString('en-US');
-    return formatted.replace(/,/g, '.');
+    // const formatted = parseInt(num).toLocaleString('en-US');
+    // return formatted.replace(/,/g, '.');
+
+    const target = parseInt(num);
+    const amountSign = (() => {
+        switch (true) {
+            case target >= 1000000000:
+                return 'B';
+            case target >= 1000000:
+                return 'M';
+            case target >= 1000:
+                return 'K';
+            default:
+                return '';
+        }
+    })(); 
+
+    if (target >= 1000000000) {
+        const formatted = (target / 1000000000).toFixed(1);
+        return formatted.replace(/\.0$/, '') + amountSign;
+
+    } else if (target >= 1000000) {
+        const formatted = (target / 1000000).toFixed(1);
+        return formatted.replace(/\.0$/, '') + amountSign;
+
+    } else if (target >= 100000) {
+        const formatted = (target / 1000).toFixed(0);
+        return formatted.replace(/\.0$/, '') + amountSign;
+
+    } else if (target >= 1000) {
+        const formatted = (target / 1000).toFixed(1);
+        return formatted.replace(/\.0$/, '') + amountSign;
+    }
+
+    return target.toString();
 }
 function formatTotal(data) {
 
@@ -98,7 +133,7 @@ CA: <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === 'ether' ? 'ether' : 'bnb'}/pair-explorer/${tokenInfo.address}">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === 'ether' ? 'ethereum' : 'bsc'}/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address}-${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}">💠Ave</a> 
 
-<b>Join ${process.env.TELEGRAM_CHANNEL} to be an early bird in every gem</b>
+<b>Join ${TELEGRAM.CHANNEL} to be an early bird in every gem</b>
 `
     );
 }
@@ -109,13 +144,13 @@ function getFirstCallText(tokenInfo, tokenDetailsForMessage, channelInnerLink, c
 <b>Token Name:</b> ${escapeHtmlEntities(tokenInfo.name)}
 
 <b>MCap:</b> ${addNumberSeparators(tokenInfo?.market_cap || 0) || 'no data'} | <b>Vol 24h:</b> ${addNumberSeparators(tokenDetailsForMessage.volume24)  || 'no data'} | <b>Liq:</b> ${addNumberSeparators(tokenDetailsForMessage?.liquidity)}
-<b>Holders:</b> ${tokenDetailsForMessage.holders} | <b>Renaunced:</b> ${tokenDetailsForMessage.renounced}
+<b>Holders:</b> ${tokenDetailsForMessage.holders} | <b>Renounced:</b> ${tokenDetailsForMessage.renounced}
 
 CA: <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === 'ether' ? 'ether' : 'bnb'}/pair-explorer/${tokenInfo.address}">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === 'ether' ? 'ethereum' : 'bsc'}/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address}-${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}">💠Ave</a> 
 
-<b>Join ${process.env.TELEGRAM_CHANNEL} to be an early bird in every gem</b>`
+<b>Join ${TELEGRAM.CHANNEL} to be an early bird in every gem</b>`
     );
 }
 
@@ -128,7 +163,7 @@ ECA: <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === 'ether' ? 'ether' : 'bnb'}/pair-explorer/${tokenInfo.address}">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === 'ether' ? 'ethereum' : 'bsc'}/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address}-${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}">💠Ave</a> 
 
-<b>Join ${process.env.TELEGRAM_CHANNEL} to be an early bird in every gem</b>`
+<b>Join ${TELEGRAM.CHANNEL} to be an early bird in every gem</b>`
     );
 }
 
@@ -141,13 +176,13 @@ function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, chan
 <b>Token Name:</b> ${escapeHtmlEntities(tokenInfo.name)}
 
 <b>MCap:</b> ${addNumberSeparators(tokenInfo?.market_cap || 0) || 'no data'} | <b>Vol 24h:</b> ${addNumberSeparators(tokenDetailsForMessage.volume24)  || 'no data'} | <b>Liq:</b> ${addNumberSeparators(tokenDetailsForMessage?.liquidity || 0)}
-<b>Holders:</b> ${tokenDetailsForMessage.holders} | <b>Renaunced:</b> ${tokenDetailsForMessage.renounced}
+<b>Holders:</b> ${tokenDetailsForMessage.holders} | <b>Renounced:</b> ${tokenDetailsForMessage.renounced}
 
 CA: <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === 'ether' ? 'ether' : 'bnb'}/pair-explorer/${tokenInfo.address}">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === 'ether' ? 'ethereum' : 'bsc'}/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address}-${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}">💠Ave</a> 
 
-<b>Join ${process.env.TELEGRAM_CHANNEL} to be an early bird in every gem</b>`
+<b>Join ${TELEGRAM.CHANNEL} to be an early bird in every gem</b>`
     );
 }
 
@@ -156,18 +191,18 @@ function getTrendingText(tops, ROITops) {
 `<b>🟢CALL TRENDING (LIVE)</b> 
 
 ${tops[0] ? tops.map((e, i) => (
-    `${i + 1}. <a href="https://dexscreener.com/${e.tokenData.chain === 'ether' ? 'ethereum' : 'bsc'}/${e.tokenData.address}">${escapeHtmlEntities(e.tokenData.key_name)}</a>♻️ <a href="https://t.me/${process.env.TELEGRAM_CHANNEL.split('@')[1]}/${e.tokenData.total_message_id}">${e.count} Calls</a> \n`
+    `${i + 1}. <a href="https://dexscreener.com/${e.tokenData.chain === 'ether' ? 'ethereum' : 'bsc'}/${e.tokenData.address}">${escapeHtmlEntities(e.tokenData.key_name)}</a>♻️ <a href="https://t.me/${TELEGRAM.CHANNEL.split('@')[1]}/${e.tokenData.total_message_id}">${e.count} Calls</a> \n`
 )).join('') : '[ nothing there yet ]'}
 
 <b>🟢Top Calls Channels (Max ROI Daily)</b> 
 
-${ROITops[0] ? ROITops.slice(0, 5).map((e, i) => (
-    `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(e.link)}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${process.env.TELEGRAM_CHANNEL.split('@')[1]}/${e.total_message_id}">Total Calls (${escapeHtmlEntities(e.key_name)})</a> <b>X${parseFloat(e.ROI.toFixed(2))}</b> 🔹\n`
+${ROITops[0] ? ROITops.slice(0, 10).map((e, i) => (
+    `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(e.link)}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${TELEGRAM.CHANNEL.split('@')[1]}/${e.total_message_id}">Total Calls (${escapeHtmlEntities(e.key_name)})</a> <b>X${parseFloat(e.ROI.toFixed(2))}</b> 🔹\n`
 )).join('') : '[ nothing there yet ]'}
 
 <b>(Last 24 hours)</b>
 
-<b>Join ${process.env.TELEGRAM_CHANNEL} to be an early bird in every gem</b>
+<b>Join ${TELEGRAM.CHANNEL} to be an early bird in every gem</b>
 `);
 }
 

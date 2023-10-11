@@ -89,6 +89,10 @@ const Main = async () => {
         console.log('got tops');
 
         const topsMessage = (await pool.query(`SELECT * FROM general`)).rows[0]?.tops_message_id;
+        const rows0 = (await pool.query(`SELECT * FROM general`)).rows[0];
+        const gen = (await pool.query(`SELECT * FROM general`));
+        console.log('rows0: ', rows0);
+        console.log('general: ', gen);
         console.log('tops messages:', topsMessage);
         if (topsMessage) {
             await bot.telegram.editMessageText(

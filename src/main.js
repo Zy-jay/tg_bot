@@ -104,7 +104,6 @@ const Main = async () => {
                 }).catch(err => console.log(err));
         } else {
             try {
-                await ctx.reply('wait...');
                 const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
                 console.log('tops_message:', currentTopsMessage);
                 if (currentTopsMessage) {
@@ -136,8 +135,6 @@ const Main = async () => {
                 await bot.telegram.pinChatMessage(TELEGRAM.CHANNEL, messageData.message_id).catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
 
                 await pool.query(`UPDATE general SET tops_message_id = $1 WHERE id = 1`, [messageData.message_id]);
-
-                await ctx.reply('Done!');
             } catch (error) {
                 console.log(error);
             }

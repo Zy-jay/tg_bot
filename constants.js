@@ -52,7 +52,7 @@ const QUERIES = {
     updateTokenMaxMarketCap: `UPDATE tokens SET max_market_cap = $1 WHERE address = $2`,
     updateBackupBotCurrentStatusToFalse: `UPDATE backup_bots SET is_current = false WHERE bot_number = $1`,
     updateBackupBotCurrentStatusToTrue: `UPDATE backup_bots SET is_current = true WHERE id = $1 AND bot_number = $2`,
-    updateGeneralTopsMessageId: `UPDATE general SET tops_message_id = $1 WHERE id = 1`,
+    updateGeneralTopsMessageId: `INSERT INTO general(id, tops_message_id) VALUES(1, $1) ON CONFLICT (id) DO UPDATE SET tops_message_id = $1`,
 
     // Requests to delete data
     deleteChannelByChannelIdAndBotNumber: `DELETE FROM channels WHERE channel_id = $1 AND bot_number = $2`,

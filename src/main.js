@@ -88,7 +88,7 @@ const Main = async () => {
         const ROITops = await getROITops();
         console.log('got tops');
 
-        const topsMessage = (await pool.query(`SELECT * FROM general`)).rows[0]?.tops_message_id;
+        const topsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
         console.log('tops messages:', topsMessage);
         if (topsMessage) {
             await bot.telegram.editMessageText(
@@ -105,7 +105,7 @@ const Main = async () => {
                 }).catch(err => console.log(err));
         } else {
             try {
-                const currentTopsMessage = (await pool.query(`SELECT * FROM general`)).rows[0]?.tops_message_id;
+                const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
                 console.log('tops_message:', currentTopsMessage);
                 if (currentTopsMessage) {
                     try {
@@ -135,8 +135,7 @@ const Main = async () => {
 
                 await bot.telegram.pinChatMessage(TELEGRAM.CHANNEL, messageData.message_id).catch((err) => { console.log('----handled---'); console.log(err); console.log('----------'); });
 
-                console.log('message_id: ', messageData.message_id);
-                await pool.query('INSERT INTO general(id, tops_message_id) VALUES(1, $1) ON CONFLICT (id) DO UPDATE SET tops_message_id = $1', [messageData.message_id]);
+                await pool.query(QUERIES.updateGeneralTopsMessageId, [messageData.message_id]);
             } catch (error) {
                 console.log(error);
             }

@@ -88,7 +88,8 @@ const Main = async () => {
         const ROITops = await getROITops();
         console.log('got tops');
 
-        const topsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
+        const topsMessage = (await pool.query(`SELECT * FROM general`)).rows[0]?.tops_message_id;
+        console.log('tops messages:', topsMessage);
         if (topsMessage) {
             await bot.telegram.editMessageText(
                 TELEGRAM.CHANNEL,
@@ -104,7 +105,7 @@ const Main = async () => {
                 }).catch(err => console.log(err));
         } else {
             try {
-                const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]?.tops_message_id;
+                const currentTopsMessage = (await pool.query(`SELECT * FROM general`)).rows[0]?.tops_message_id;
                 console.log('tops_message:', currentTopsMessage);
                 if (currentTopsMessage) {
                     try {

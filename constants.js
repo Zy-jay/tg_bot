@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fetch = require('node-fetch');
 
 const TELEGRAM = {
     BOT_NUMBER: parseInt(process.env.BOT_NUMBER, 10),
@@ -61,9 +62,27 @@ const QUERIES = {
     deleteChannelsByLinkAndBotNumber: `DELETE FROM channels WHERE link = $1 AND bot_number = $2`,
 }
 
+const getROI = async (pair, chainId) => {
+    const now = Math.floor(new Date().getTime() / 1000);
+
+    let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=1577826000&to=${now}&interval=330&chainId=${chainId}`).then((res) => res.json());
+    if (data.error) return 'нет данных';
+
+    data = data.history;
+    let highPrice = 0;
+    for (const i in data) {
+        if (data[i].high > highPrice) highPrice = data[i].high
+    }
+
+    const ROI = (highPrice / data[0].open).toFixed(2);
+
+    return ROI;
+}
+
 
 module.exports = {
     TELEGRAM,
     TOOLS,
-    QUERIES
+    QUERIES,
+    getROI
 }

@@ -1,4 +1,4 @@
-const { TELEGRAM } = require('../constants');
+const { TELEGRAM, getROI } = require('../constants');
 
 function formatDateToUTC(timestamp) {
     const date = new Date(parseInt(timestamp, 10));
@@ -102,21 +102,20 @@ ${formated.prelaunchCalls.map((item, i) => {
             const result = [];
             for (let index = 0; index < item.length; index++) {
                 const e = item[index];
-                const currentROI = e.ROI > 1 && e.ROI !== Infinity ? ('X' + parseFloat(e.ROI.toFixed(2))) : (e.ROI && e.ROI !== Infinity ? ('-' + parseFloat(((1 - e.ROI) * 100).toFixed(2)) + '%') : 'нет данных');
                 result.push(`${index + 1}. <a href="https://t.me/${escapeHtmlEntities(e.channelInnerLink)}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(e.channelTitle)}</a>: ${(new Date(parseInt(e.timestamp, 10))).toUTCString().split(' ')[4]} \n`);
 
             }
             return result;
         }).flat(Infinity).join('')}`;
 
-    const launched = formated.result.map((item, i) => {
+    const launched = formated.result.map(async (item, i) => {
         const result = [];
         result.push(`<b>${item[0].date}</b> \n`);
         for (let index = 0; index < item.length; index++) {
             const elementNumber = formated.result.flat(Infinity).findIndex(e => e.channel_id + e.message_id === item[index].channel_id + item[index].message_id);
 
             const e = item[index];
-            const currentROI = e.ROI > 1 && e.ROI !== Infinity ? ('X' + parseFloat(e.ROI.toFixed(2))) : (e.ROI && e.ROI !== Infinity ? ('-' + parseFloat(((1 - e.ROI) * 100).toFixed(2)) + '%') : 'нет данных');
+            const currentROI = await getROI(tokenInfo?.address, tokenInfo?.chain == 'ether' ? 1 : 56);
 
             result.push(`${elementNumber + 1}. <a href="https://t.me/${escapeHtmlEntities(e.channelInnerLink)}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(e.channelTitle)}</a>: ${(new Date(parseInt(e.timestamp, 10))).toUTCString().split(' ')[4]} | <b>ROI</b> ${currentROI} 🔹\n`);
 

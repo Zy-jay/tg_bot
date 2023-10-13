@@ -93,7 +93,7 @@ function formatTotal(data) {
     };
 }
 
-function getTotalText(tokenInfo, channelsDetails) {
+function getTotalText(tokenInfo, channelsDetails, pairAddress) {
     const formated = formatTotal(channelsDetails);
 
     const prelaunchText =
@@ -115,7 +115,7 @@ ${formated.prelaunchCalls.map((item, i) => {
             const elementNumber = formated.result.flat(Infinity).findIndex(e => e.channel_id + e.message_id === item[index].channel_id + item[index].message_id);
 
             const e = item[index];
-            const currentROI = await getROI(tokenInfo?.address, tokenInfo?.chain == 'ether' ? 1 : 56);
+            const currentROI = await getROI(pairAddress, tokenInfo?.chain == 'ether' ? 1 : 56);
 
             result.push(`${elementNumber + 1}. <a href="https://t.me/${escapeHtmlEntities(e.channelInnerLink)}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(e.channelTitle)}</a>: ${(new Date(parseInt(e.timestamp, 10))).toUTCString().split(' ')[4]} | <b>ROI</b> ${currentROI} 🔹\n`);
 

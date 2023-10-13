@@ -51,7 +51,7 @@ async function eventPrint(event, bot) {
                     }
                 ).then(res => res.json());
 
-                if (tokenData.statusCode === 200) return tokenData;
+                if (tokenData.statusCode === 200) return {tokenData: tokenData, pairData: pairData};
 
 
                 // try to get BSC pair
@@ -69,7 +69,7 @@ async function eventPrint(event, bot) {
                     }
                 }).then(res => res.json());
 
-                if (bscTokenData.statusCode === 200) return bscTokenData;
+                if (bscTokenData.statusCode === 200) return {bscTokenData: bscTokenData, bscPairData: bscPairData};
 
                 console.log('no token data found');
 
@@ -78,7 +78,7 @@ async function eventPrint(event, bot) {
 
             })();
 
-            const tokenDataDexView = tokenData?.data?.address ? {} : await getTokenData(iterator);
+            const tokenDataDexView = tokenData?.tokenData?.data?.address ? {} : await getTokenData(iterator);
 
             console.log(tokenData);
 
@@ -86,13 +86,15 @@ async function eventPrint(event, bot) {
 
             if (!tokenData && !tokenDataDexView) continue;
 
-            const tokenInfo = tokenData?.data?.address ? {
-                name: tokenData?.data?.name || "",
-                key_name: '$' + tokenData?.data?.symbol || "",
-                address: tokenData?.data?.address || "",
-                market_cap: tokenData?.data?.reprPair?.price * tokenData?.data?.metrics?.totalSupply,
-                chain: tokenData?.data?.chain || "ether",
-                pairs: tokenData?.data?.pairs || []
+            const pairAddress = tokenData?.bscPairData != undefined ? tokenData?.bscPairData?.data?.token?.address : tokenData?.pairData?.data?.token?.address;
+
+            const tokenInfo = tokenData?.tokenData?.data?.address ? {
+                name: tokenData?.tokenData?.data?.name || "",
+                key_name: '$' + tokenData?.tokenData?.data?.symbol || "",
+                address: tokenData?.tokenData?.data?.address || "",
+                market_cap: tokenData?.tokenData?.data?.reprPair?.price * tokenData?.tokenData?.data?.metrics?.totalSupply,
+                chain: tokenData?.tokenData?.data?.chain || "ether",
+                pairs: tokenData?.tokenData?.data?.pairs || []
             }
                 :
                 {
@@ -118,7 +120,7 @@ async function eventPrint(event, bot) {
 
             const hasReleasedCall = (await pool.query(QUERIES.hasReleasedCallByTokenAndPrelaunch, [tokenInfo.address, false])).rows[0] || false;
 
-            const isPrelaunchInDextools = (pairInfo?.data?.metrics?.liquidity || 0) <= 0 || !tokenData?.data?.pairs?.[0];
+            const isPrelaunchInDextools = (pairInfo?.data?.metrics?.liquidity || 0) <= 0 || !tokenData?.tokenData?.data?.pairs?.[0];
             const isPrelaunchInDexview = (tokenDataDexView.liquidity || 0) <= 0;
 
             const isPrelaunch = (isPrelaunchInDextools && isPrelaunchInDexview) && !hasReleasedCall;
@@ -126,8 +128,8 @@ async function eventPrint(event, bot) {
             // const isPrelaunch = true;
 
             const tokenDetailsForMessage = {
-                holders: tokenData?.data?.metrics?.holders || 'no data',
-                renounced: tokenData?.data?.audit?.is_contract_renounced !== undefined ? tokenData?.data?.audit?.is_contract_renounced : "no data",
+                holders: tokenData?.tokenData?.data?.metrics?.holders || 'no data',
+                renounced: tokenData?.tokenData?.data?.audit?.is_contract_renounced !== undefined ? tokenData?.tokenData?.data?.audit?.is_contract_renounced : "no data",
                 liquidity: pairInfo?.data?.metrics?.liquidity || tokenDataDexView?.liquidity || 0,
                 volume24: pairInfo?.data?.price24h?.volume || tokenDataDexView?.newInformation?.volume24h || 0
             }
@@ -240,7 +242,7 @@ async function eventPrint(event, bot) {
 
                 const totalMessage = await bot.telegram.sendMessage(
                     TELEGRAM.CHANNEL,
-                    getTotalText(tokenInfo, channelsDetails),
+                    getTotalText(tokenInfo, channelsDetails, pairAddress),
                     {
                         parse_mode: 'HTML',
                         disable_web_page_preview: true
@@ -294,7 +296,7 @@ async function eventPrint(event, bot) {
                     TELEGRAM.CHANNEL,
                     tokenDbData.total_message_id,
                     undefined,
-                    getTotalText(tokenInfo, channelsDetails),
+                    getTotalText(tokenInfo, channelsDetails, pairAddress),
                     {
                         parse_mode: 'HTML',
                         disable_web_page_preview: true

@@ -93,7 +93,7 @@ function formatTotal(data) {
     };
 }
 
-function getTotalText(tokenInfo, channelsDetails, pairAddress) {
+async function getTotalText(tokenInfo, channelsDetails, pairAddress) {
     const formated = formatTotal(channelsDetails);
 
     const prelaunchText =
@@ -108,7 +108,7 @@ ${formated.prelaunchCalls.map((item, i) => {
             return result;
         }).flat(Infinity).join('')}`;
 
-    const launched = formated.result.map(async (item, i) => {
+    const launched = await Promise.all(formated.result.map(async (item, i) => {
         const result = [];
         result.push(`<b>${item[0].date}</b> \n`);
         for (let index = 0; index < item.length; index++) {
@@ -122,7 +122,7 @@ ${formated.prelaunchCalls.map((item, i) => {
 
         }
         return result;
-    }).flat(Infinity).join('');
+    }).flat(Infinity).join(''));
 
     return (
         `<b>🟩ВСЕГО ЗАПРОСОВ </b> ${escapeHtmlEntities(tokenInfo.key_name)} - ${channelsDetails.length}

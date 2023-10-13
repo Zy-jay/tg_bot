@@ -62,10 +62,32 @@ const QUERIES = {
     deleteChannelsByLinkAndBotNumber: `DELETE FROM channels WHERE link = $1 AND bot_number = $2`,
 }
 
-const getROI = async (pair, chainId) => {
+const getROI = async (pair, chainId, time) => {
     const now = Math.floor(new Date().getTime() / 1000);
+    console.log('data params: ', pair, chainId, time)
+    const pairs = await fetch(`https://api.dextools.io/v1/token?chain=${chainId == 1 ? 'ether' : 'bsc'}&address=${pair}&page=0&pageSize=20`, {
+        headers: {
+            'X-API-Key': '55eaa73d8aa4bcf9daa18f1574940297'
+        }
+    }).then(res => res.json());
+    if (pairs.errorCode) {
+        console.log(pairs)
+        let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=330&chainId=${chainId}`).then((res) => res.json());
+        console.log('data: ', data);
+        if (data.error) return 'нет данных';
 
-    let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=1577826000&to=${now}&interval=330&chainId=${chainId}`).then((res) => res.json());
+        data = data.history;
+        let highPrice = 0;
+        for (const i in data) {
+            if (data[i].high > highPrice) highPrice = data[i].high
+        }
+
+        const ROI = (highPrice / data[0].open).toFixed(2);
+        console.log("ROI IN FUNC: ", ROI);
+        return ROI;
+    };
+    let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pairs?.data?.pairs[0]?.address}?from=${time}&to=${now}&interval=330&chainId=${chainId}`).then((res) => res.json());
+    console.log('data: ', data);
     if (data.error) return 'нет данных';
 
     data = data.history;
@@ -75,7 +97,7 @@ const getROI = async (pair, chainId) => {
     }
 
     const ROI = (highPrice / data[0].open).toFixed(2);
-
+    console.log("ROI IN FUNC: ", ROI);
     return ROI;
 }
 

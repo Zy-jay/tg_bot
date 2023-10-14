@@ -78,15 +78,16 @@ const getROI = async (pair, chainId, time) => {
         if (data.error) return 'нет данных';
 
         data = data.history;
-        let open = 0;
+        let open = 1;
         let highPrice = 0;
         for (const i in data) {
             if (data[i].time >= time) {
                 if (data[i].high > highPrice) highPrice = data[i].high
-                if (open == 0) open = data[i].open;
+                if (open == 1) open = data[i].open;
             }
         }
-
+        console.log('high price:', highPrice);
+        console.log('open price:', open);
         const ROI = (highPrice / open).toFixed(2);
         console.log("ROI IN FUNC: ", ROI);
         return ROI;
@@ -97,9 +98,16 @@ const getROI = async (pair, chainId, time) => {
 
     data = data.history;
     let highPrice = 0;
+    let open = 1;
     for (const i in data) {
-        if (data[i].high > highPrice) highPrice = data[i].high
+        if (data[i].time >= time) {
+            if (data[i].high > highPrice) highPrice = data[i].high
+            if (open == 1) open = data[i].open
+        }
     }
+
+    console.log('high price:', highPrice);
+    console.log('open price:', open);
 
     const ROI = (highPrice / data[0].open).toFixed(2);
     console.log("ROI IN FUNC: ", ROI);

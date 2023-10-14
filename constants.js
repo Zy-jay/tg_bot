@@ -63,6 +63,7 @@ const QUERIES = {
 }
 
 const getROI = async (pair, chainId, time) => {
+    time = (time / 1000).toFixed(0);
     const now = Math.floor(new Date().getTime() / 1000);
     console.log('data params: ', pair, chainId, time)
     const pairs = await fetch(`https://api.dextools.io/v1/token?chain=${chainId == 1 ? 'ether' : 'bsc'}&address=${pair}&page=0&pageSize=20`, {
@@ -77,12 +78,16 @@ const getROI = async (pair, chainId, time) => {
         if (data.error) return 'нет данных';
 
         data = data.history;
+        let open = 0;
         let highPrice = 0;
         for (const i in data) {
-            if (data[i].high > highPrice) highPrice = data[i].high
+            if (data[i].time >= time) {
+                if (data[i].high > highPrice) highPrice = data[i].high
+                if (open == 0) open = data[i].open;
+            }
         }
 
-        const ROI = (highPrice / data[0].open).toFixed(2);
+        const ROI = (highPrice / open).toFixed(2);
         console.log("ROI IN FUNC: ", ROI);
         return ROI;
     };

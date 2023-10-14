@@ -121,6 +121,7 @@ ${formated.prelaunchCalls.map((item, i) => {
             result.push(`${elementNumber + 1}. <a href="https://t.me/${escapeHtmlEntities(e.channelInnerLink)}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(e.channelTitle)}</a>: ${(new Date(parseInt(e.timestamp, 10))).toUTCString().split(' ')[4]} | <b>ROI</b> ${currentROI} 🔹\n`);
 
         }
+        console.log(result);
         return result;
     }).flat(Infinity).join(''));
 

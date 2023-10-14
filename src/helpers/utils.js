@@ -77,9 +77,19 @@ async function swapToNextAccount(bot) {
     }
 }
 
+const sleep = async (ms, msg) => { 
+    if (msg) { 
+      console.log(msg !== true ? msg : `Timout ${ms / 1000} sec...`); 
+    } 
+    return new Promise((resolve) => { 
+      setTimeout(resolve, ms); 
+    }); 
+  };
+
 module.exports = {
     getTokenData,
     reloadScript,
     swapAccount,
-    swapToNextAccount
+    swapToNextAccount,
+    sleep
 }

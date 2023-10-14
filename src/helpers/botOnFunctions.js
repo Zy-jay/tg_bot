@@ -266,16 +266,11 @@ async function getROITops() {
                 }, 0);
 
             call.maxMarketCupTest = maxMarketCup;
-            call.ROI = maxMarketCup / (parseInt(call.market_cap, 10) || 0);
-            if (call.ROI > 1) {
-                result.push(call);
-            }
-
-            console.log('tokens info:', tokensInfo);
-            
-            // console.log(call.timestamp)const token = (await pool.query(`SELECT * FROM tokens WHERE id = $1`, [call.token_id])).rows;
-
-            // call.ROI = await getROI(token?.address, token?.chain == 'bsc' ? 56 : 1, call?.timestamp);
+   
+            const token = tokensInfo.filter(token => token.id == call.token_id)[0];
+            console.log(token)
+            call.ROI = await getROI(token?.address, call?.chain == 'bsc' ? 56 : 1, call?.timestamp);
+            console.log(call.ROI);
         }
 
         return result;

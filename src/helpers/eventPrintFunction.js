@@ -242,7 +242,7 @@ async function eventPrint(event, bot) {
 
                 const totalMessage = await bot.telegram.sendMessage(
                     TELEGRAM.CHANNEL,
-                    await getTotalText(tokenInfo, channelsDetails, pairAddress),
+                    await getTotalText(tokenInfo, channelsDetails),
                     {
                         parse_mode: 'HTML',
                         disable_web_page_preview: true
@@ -296,7 +296,7 @@ async function eventPrint(event, bot) {
                     TELEGRAM.CHANNEL,
                     tokenDbData.total_message_id,
                     undefined,
-                    await getTotalText(tokenInfo, channelsDetails, pairAddress),
+                    await getTotalText(tokenInfo, channelsDetails),
                     {
                         parse_mode: 'HTML',
                         disable_web_page_preview: true

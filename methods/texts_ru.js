@@ -111,6 +111,7 @@ ${formated.prelaunchCalls.map((item, i) => {
     const launched = await Promise.all(formated.result.map(async (item, i) => {
         const result = [];
         result.push(`<b>${item[0].date}</b> \n`);
+        console.log(item);
         for (let index = 0; index < item.length; index++) {
             const elementNumber = formated.result.flat(Infinity).findIndex(e => e.channel_id + e.message_id === item[index].channel_id + item[index].message_id);
 
@@ -123,7 +124,7 @@ ${formated.prelaunchCalls.map((item, i) => {
         }
         console.log(result);
         return result;
-    }).flat(Infinity).join(''));
+    }));
 
     return (
         `<b>🟩ВСЕГО ЗАПРОСОВ </b> ${escapeHtmlEntities(tokenInfo.key_name)} - ${channelsDetails.length}

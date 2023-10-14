@@ -2,7 +2,7 @@ const { Markup } = require('telegraf');
 
 const { getTrendingText } = require('../../methods/texts_ru');
 const pool = require('../../methods/database.js');
-const { TELEGRAM, QUERIES } = require('../../constants.js');
+const { TELEGRAM, QUERIES, getROI } = require('../../constants.js');
 const { swapAccount } = require('./utils.js');
 
 const add_account = async (ctx) => {
@@ -248,7 +248,7 @@ async function getROITops() {
         tokens.sort((a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10));
     }
 
-    const ROIs = sortedByTokens.map(calls => {
+    const ROIs = sortedByTokens.map(async calls => {
 
         const result = [];
 
@@ -269,6 +269,14 @@ async function getROITops() {
             if (call.ROI > 1) {
                 result.push(call);
             }
+
+            const token = (await pool.query(`SELECT * FROM tokens WHERE id = $1`, [call.token_id]).rows);
+            console.log('token info:', token);
+            console.log(token.address);
+            console.log(token.chain);
+            console.log(call.timestamp)
+
+            call.ROI = await getROI(token?.address, token?.chain == 'bsc' ? 56 : 1, call?.timestamp);
         }
 
         return result;

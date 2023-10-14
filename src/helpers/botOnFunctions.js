@@ -251,6 +251,7 @@ async function getROITops() {
     const ROIs = sortedByTokens.map(async calls => {
 
         const result = [];
+        const tokensInfo = (await pool.query(`SELECT * FROM tokens`)).rows;
 
         for (let index = 0; index < calls.length; index++) {
             const call = calls[index];
@@ -270,13 +271,11 @@ async function getROITops() {
                 result.push(call);
             }
 
-            const token = (await pool.query(`SELECT * FROM tokens WHERE id = $1`, [call.token_id]).rows);
-            console.log('token info:', token);
-            console.log(token.address);
-            console.log(token.chain);
-            console.log(call.timestamp)
+            console.log('tokens info:', tokensInfo);
+            
+            // console.log(call.timestamp)const token = (await pool.query(`SELECT * FROM tokens WHERE id = $1`, [call.token_id])).rows;
 
-            call.ROI = await getROI(token?.address, token?.chain == 'bsc' ? 56 : 1, call?.timestamp);
+            // call.ROI = await getROI(token?.address, token?.chain == 'bsc' ? 56 : 1, call?.timestamp);
         }
 
         return result;

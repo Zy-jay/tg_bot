@@ -3,7 +3,7 @@ const { Markup } = require('telegraf');
 
 const { getTotalText, getFirstCallText, getUpdateText, getTrendingText, getPreCallText } = require('../../methods/texts_ru');
 const pool = require('../../methods/database.js');
-const { TELEGRAM, TOOLS, QUERIES } = require('../../constants');
+const { TELEGRAM, TOOLS, QUERIES, getROI } = require('../../constants');
 const { getTokenData } = require('./utils.js');
 const { getTops, getROITops } = require('./botOnFunctions');
 
@@ -172,6 +172,8 @@ async function eventPrint(event, bot) {
                     (await pool.query(QUERIES.getTotalCallsByTokenAddress, [tokenInfo.address]))
                         .rows.sort((a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10));
 
+                const tokens = (await pool.query(`SELECT * FROM tokens`)).rows;
+
                 for (const call of allCalls) {
                     const dbData = (await pool.query(QUERIES.getSavedDataByChannelId, [call.channel_id])).rows[0];
                     call.channelInnerLink = dbData?.link;
@@ -183,16 +185,8 @@ async function eventPrint(event, bot) {
 
                 for (let index = 0; index < allCalls.length; index++) {
                     const call = allCalls[index];
-                    const maxMarketCup = allCalls.slice(index + 1, allCalls.length)
-                        .reduce((acc, cur) => {
-                            if (parseInt(cur.market_cap, 10) > acc) {
-                                return parseInt(cur.market_cap, 10);
-                            } else {
-                                return acc;
-                            }
-                        }, 0);
 
-                    call.ROI = maxMarketCup / (parseInt(call.market_cap, 10) || 0); // getting Infinity in case of 0
+                    call.ROI = getROI(tokens.filter(token => token.id == call.token_id)[0].address, tokens.filter(token => token.id == call.token_id)[0].chain == 'bsc' ? 56 : 1, call.timestamp);
                     channelsDetails.push(call);
                 }
 

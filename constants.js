@@ -68,27 +68,27 @@ const getROI = async (pair, chainId, time) => {
     console.log('data params: ', pair, chainId, time)
     const pairs = await fetch(`https://api.dextools.io/v1/token?chain=${chainId == 1 ? 'ether' : 'bsc'}&address=${pair}&page=0&pageSize=20`, {
         headers: {
-            'X-API-Key': '55eaa73d8aa4bcf9daa18f1574940297'
+            'X-API-Key': TOOLS.DEXTOOLS_API_KEY
         }
     }).then(res => res.json());
     if (pairs.errorCode) {
         console.log(pairs)
-        let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=330&chainId=${chainId}`).then((res) => res.json());
+        let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=1&chainId=${chainId}`).then((res) => res.json());
         console.log('data: ', data);
         if (data.error) return 'нет данных';
 
         data = data.history;
-        let open = 1;
+        let firstPrice = 1;
         let highPrice = 0;
         for (const i in data) {
             if (data[i].time >= time) {
-                if (data[i].high > highPrice) highPrice = data[i].high
-                if (open == 1) open = data[i].open;
+                if (firstPrice == 1) firstPrice = data[i].open;
+                if (data[i].open > highPrice) highPrice = data[i].open
             }
         }
         console.log('high price:', highPrice);
-        console.log('open price:', open);
-        const ROI = (highPrice / open).toFixed(2);
+        console.log('open price:', firstPrice);
+        const ROI = (highPrice / firstPrice).toFixed(2);
         console.log("ROI IN FUNC: ", ROI);
         return ROI;
     };
@@ -98,18 +98,18 @@ const getROI = async (pair, chainId, time) => {
 
     data = data.history;
     let highPrice = 0;
-    let open = 1;
+    let firstPrice = 1;
     for (const i in data) {
         if (data[i].time >= time) {
-            if (data[i].high > highPrice) highPrice = data[i].high
-            if (open == 1) open = data[i].open
+            if (firstPrice == 1) firstPrice = data[i].open;
+            if (data[i].open > highPrice) highPrice = data[i].open
         }
     }
 
     console.log('high price:', highPrice);
-    console.log('open price:', open);
+    console.log('open price:', firstPrice);
 
-    const ROI = (highPrice / data[0].open).toFixed(2);
+    const ROI = (highPrice / firstPrice).toFixed(2);
     console.log("ROI IN FUNC: ", ROI);
     return ROI;
 }

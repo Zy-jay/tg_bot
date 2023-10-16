@@ -91,8 +91,14 @@ const getROI = async (pair, chainId, time) => {
 
     for (const i in data) {
       if (data[i].time >= time) {
-        if (firstPrice === undefined) firstPrice = data[i].open;
-        if (data[i].open > highPrice) highPrice = data[i].high;
+        if (firstPrice === undefined) {
+          console.log("Start data", data[i]);
+          firstPrice = data[i].open;
+        }
+        if (data[i].high > highPrice) {
+          console.log("Start data", data[i]);
+          highPrice = data[i].high;
+        }
       }
     }
     console.log("high price:", highPrice);
@@ -104,14 +110,20 @@ const getROI = async (pair, chainId, time) => {
   let data = await fetch(
     `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pairs?.data?.pairs[0]?.address}?from=${time}&to=${now}&interval=1S&chainId=${chainId}`
   ).then((res) => res.json());
-//   console.log("data: ", data);
+  //   console.log("data: ", data);
   if (!data.history) return "нет данных";
 
   data = data.history;
   for (const i in data) {
     if (data[i].time >= time) {
-      if (firstPrice === undefined) firstPrice = data[i].open;
-      if (data[i].open > highPrice) highPrice = data[i].high;
+      if (firstPrice === undefined) {
+        console.log("Start data", data[i]);
+        firstPrice = data[i].open;
+      }
+      if (data[i].high > highPrice) {
+        console.log("Start data", data[i]);
+        highPrice = data[i].high;
+      }
     }
   }
 

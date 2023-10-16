@@ -1,4 +1,4 @@
-const { TELEGRAM, getROI } = require('../constants');
+const { TELEGRAM, getROI, social_network } = require('../constants');
 const { sleep } = require('../src/helpers/utils');
 
 function formatDateToUTC(timestamp) {
@@ -36,7 +36,7 @@ function addNumberSeparators(num) {
             default:
                 return '';
         }
-    })(); 
+    })();
 
     if (target >= 1000000000) {
         const formatted = (target / 1000000000).toFixed(1);
@@ -128,6 +128,23 @@ ${formated.prelaunchCalls.map((item, i) => {
         return result;
     }));
 
+    const networks = await social_network(tokenInfo.address, tokenInfo.chain == 'ether' ? 1 : 56);
+    let website = '';
+    let tg = '';
+    let twitter = '';
+    let git = '';
+    let schat = '';
+    let youtube = '';
+    if (networks) {
+        website = networks?.website ? `<a href="${networks?.website}">💠Сайт</a>` : '';
+        tg = networks?.telegram ? ` | <a href="${networks?.telegram}">💠Telegram</a>` : '';
+        twitter = networks?.twitter ? ` | <a href="${networks?.twitter}">💠Twitter</a>` : '';
+        git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
+        schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
+        youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
+    }
+    const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
+
     return (
         `<b>🟩ВСЕГО ЗАПРОСОВ </b> ${escapeHtmlEntities(tokenInfo.key_name)} - ${channelsDetails.length}
 
@@ -136,7 +153,7 @@ ${formated.result[0] ? launched : '\n'}
 CA: <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === 'ether' ? 'ether' : 'bnb'}/pair-explorer/${tokenInfo.address}">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === 'ether' ? 'ethereum' : 'bsc'}/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address}-${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}">💠Ave</a> 
-
+${socialLinks}
 <b>Заходи в ${TELEGRAM.CHANNEL} чтобы узнавать о новых токенах первым</b>
 `
     );
@@ -171,7 +188,23 @@ ECA: <code href="#">${tokenInfo.address}</code>
     );
 }
 
-function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails) {
+async function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails) {
+    const networks = await social_network(tokenInfo.address, tokenInfo.chain == 'ether' ? 1 : 56);
+    let website = '';
+    let tg = '';
+    let twitter = '';
+    let git = '';
+    let schat = '';
+    let youtube = '';
+    if (networks) {
+        website = networks?.website ? `<a href="${networks?.website}">💠Сайт</a>` : '';
+        tg = networks?.telegram ? ` | <a href="${networks?.telegram}">💠Telegram</a>` : '';
+        twitter = networks?.twitter ? ` | <a href="${networks?.twitter}">💠Twitter</a>` : '';
+        git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
+        schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
+        youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
+    }
+    const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
     return (
         `<b>🟩НОВЫЙ ЗАПРОС -</b> <a href="https://t.me/${escapeHtmlEntities(channelInnerLink)}/${escapeHtmlEntities(message.id)}">${escapeHtmlEntities(channelTitle)}</a> запрошено ${escapeHtmlEntities(tokenInfo.key_name)}
 
@@ -184,7 +217,8 @@ function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, chan
 
 CA: <code href="#">${tokenInfo.address}</code>
 
-<a href="https://www.dextools.io/app/en/${tokenInfo.chain === 'ether' ? 'ether' : 'bnb'}/pair-explorer/${tokenInfo.address}">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === 'ether' ? 'ethereum' : 'bsc'}/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address}-${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}">💠Ave</a> 
+<a href="https://www.dextools.io/app/en/${tokenInfo.chain === 'ether' ? 'ether' : 'bnb'}/pair-explorer/${tokenInfo.address}">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === 'ether' ? 'ethereum' : 'bsc'}/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address}-${tokenInfo.chain === 'ether' ? 'eth' : 'bsc'}">💠Ave</a>
+${socialLinks}
 
 <b>Заходи в ${TELEGRAM.CHANNEL} чтобы узнавать о новых токенах первым</b>`
     );
@@ -201,8 +235,8 @@ ${tops[0] ? tops.map((e, i) => (
 <b>🟢Top Calls Channels (Max ROI Daily)</b> 
 
 ${ROITops[0] ? ROITops.slice(0, 10).map((e, i) => (
-    `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(e.link)}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${process.env.TELEGRAM_CHANNEL.split('@')[1]}/${e.total_message_id}">Total Calls (${escapeHtmlEntities(e.key_name)})</a> <b>X${parseFloat(e.ROI.toFixed(2))}</b> 🔹\n`
-)).join('') : '[ тут пока ничего нет ]'}
+            `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(e.link)}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${process.env.TELEGRAM_CHANNEL.split('@')[1]}/${e.total_message_id}">Total Calls (${escapeHtmlEntities(e.key_name)})</a> <b>X${parseFloat(e.ROI.toFixed(2))}</b> 🔹\n`
+        )).join('') : '[ тут пока ничего нет ]'}
 
 <b>(За последние 24 часа)</b>
 

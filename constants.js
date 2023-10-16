@@ -114,10 +114,42 @@ const getROI = async (pair, chainId, time) => {
     return ROI;
 }
 
+const social_network = async (tokenAddress, chainId) => {
+    const data = await fetch(`https://api.pinksale.finance/api/v1/pool/detail?chainId=${chainId}&tokenAddress=${tokenAddress}`).then(res => res.json());
+    if (data.error || !data.poolDetails) {
+        const pairs = await fetch(`https://api.dextools.io/v1/token?chain=${chainId == 1 ? 'ether' : 'bsc'}&address=${tokenAddress}&page=0&pageSize=20`, {
+            headers: {
+                'X-API-Key': TOOLS.DEXTOOLS_API_KEY
+            }
+        }).then(res => res.json());
+        if (pairs.errorCode) {
+            const data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/pair/poolAddress/${tokenAddress}?chainId=${chainId}`).then(res => res.json());
+            if (data?.error || !data?.pairs?.data?.baseTokenInfo) return null;
+            const res = data?.pairs?.data?.baseTokenInfo;
+            const resObj = { telegram: res?.telegram, twitter: res?.twitter, website: res?.website };
+            console.log(resObj);
+            return resObj;
+        };
+        const data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/pair/poolAddress/${pairs?.data?.pairs[0]?.address}?chainId=${chainId}`).then(res => res.json());
+        if (data?.error || !data?.pairs?.data?.baseTokenInfo) return null;
+        const res = data?.pairs?.data?.baseTokenInfo;
+        const resObj = { telegram: res?.telegram, twitter: res?.twitter, website: res?.website };
+        console.log(resObj);
+        return resObj;
+    }
+    const res = JSON.parse(data.poolDetails);
+    delete res.a;
+    delete res.h;
+    const resObj = { website: res?.b, twitter: res?.d, github: res?.e, telegram: res?.f, sourceChat: res?.g, youtube: res?.s };
+    console.log(resObj);
+    return resObj;
+}
+
 
 module.exports = {
     TELEGRAM,
     TOOLS,
     QUERIES,
-    getROI
+    getROI,
+    social_network
 }

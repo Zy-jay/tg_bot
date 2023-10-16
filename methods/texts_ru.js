@@ -118,7 +118,7 @@ ${formated.prelaunchCalls.map((item, i) => {
 
             const e = item[index];
             console.log('e.timestamp: ', e.timestamp);
-            const currentROI = await getROI(tokenInfo.address, tokenInfo?.chain == 'ether' ? 1 : 56, e.timestamp);
+            const currentROI = await getROI(tokenInfo.address, tokenInfo?.chain == 'ether' ? 1 : 56, channelsDetails[0].timestamp);
             await sleep(2000);
             console.log('currentROI: ', currentROI);
             result.push(`${elementNumber + 1}. <a href="https://t.me/${escapeHtmlEntities(e.channelInnerLink)}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(e.channelTitle)}</a>: ${(new Date(parseInt(e.timestamp, 10))).toUTCString().split(' ')[4]} | <b>ROI</b> ${currentROI == 0 ? '🍀' : currentROI}x🔹\n`);

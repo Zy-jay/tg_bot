@@ -73,7 +73,7 @@ const getROI = async (pair, chainId, time) => {
     }).then(res => res.json());
     if (pairs.errorCode) {
         console.log(pairs)
-        let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=15&chainId=${chainId}`).then((res) => res.json());
+        let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=1S&chainId=${chainId}`).then((res) => res.json());
         console.log('data: ', data);
         if (data.error) return 'нет данных';
 

@@ -92,7 +92,7 @@ const getROI = async (pair, chainId, time) => {
         console.log("ROI IN FUNC: ", ROI);
         return ROI;
     };
-    let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pairs?.data?.pairs[0]?.address}?from=${time}&to=${now}&interval=1&chainId=${chainId}`).then((res) => res.json());
+    let data = await fetch(`https://dex-api-production.up.railway.app/v1/dex/candles/history/${pairs?.data?.pairs[0]?.address}?from=${time}&to=${now}&interval=15&chainId=${chainId}`).then((res) => res.json());
     console.log('data: ', data);
     if (data.error) return 'нет данных';
 

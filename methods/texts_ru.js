@@ -117,7 +117,7 @@ ${formated.prelaunchCalls.map((item, i) => {
             const elementNumber = formated.result.flat(Infinity).findIndex(e => e.channel_id + e.message_id === item[index].channel_id + item[index].message_id);
 
             const e = item[index];
-            console.log('e.timestamp: ', e.timestamp);
+            console.log('e.timestamp: ', channelsDetails[0].timestamp);
             const currentROI = await getROI(tokenInfo.address, tokenInfo?.chain == 'ether' ? 1 : 56, channelsDetails[0].timestamp);
             await sleep(2000);
             console.log('currentROI: ', currentROI);

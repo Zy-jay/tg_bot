@@ -179,6 +179,9 @@ ${formated.prelaunchCalls
         git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
         schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
         youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
+    } else {
+        twitter = ` | <a href="${twitterUrl ? twitterUrl : ''}">💠Twitter</a>`;
+        tg = ` | <a href="${tgUrl ? tgUrl : ''}">💠Telegram</a>`;
     }
     const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
     console.log('networks text ', socialLinks)
@@ -232,6 +235,9 @@ async function getFirstCallText(
         git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
         schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
         youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
+    } else {
+        twitter = ` | <a href="${twitterUrl ? twitterUrl : ''}">💠Twitter</a>`;
+        tg = ` | <a href="${tgUrl ? tgUrl : ''}">💠Telegram</a>`;
     }
     const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
     console.log('networks text ', socialLinks)
@@ -287,6 +293,9 @@ async function getPreCallText(tokenInfo, channelInnerLink, channelTitle, message
         git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
         schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
         youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
+    } else {
+        twitter = ` | <a href="${twitterUrl ? twitterUrl : ''}">💠Twitter</a>`;
+        tg = ` | <a href="${tgUrl ? tgUrl : ''}">💠Telegram</a>`;
     }
     const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
     console.log('networks text ', socialLinks)
@@ -333,6 +342,9 @@ async function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink
         git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
         schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
         youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
+    } else {
+        twitter = ` | <a href="${twitterUrl ? twitterUrl : ''}">💠Twitter</a>`;
+        tg = ` | <a href="${tgUrl ? tgUrl : ''}">💠Telegram</a>`;
     }
     const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
     console.log('networks text: ', socialLinks)

@@ -117,7 +117,6 @@ ${formated.prelaunchCalls
                 }
                 return result;
             })
-            .filter(item => item.length > 0)
             .flat(Infinity)
             .join("")}`;
 
@@ -158,7 +157,7 @@ ${formated.prelaunchCalls
             }
             console.log(result);
             return result;
-        }).filter(item => item.length > 0)
+        })
     );
 
     const networks = await social_network(tokenInfo.address, tokenInfo.chain == 'ether' ? 1 : 56);

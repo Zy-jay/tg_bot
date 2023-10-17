@@ -267,7 +267,7 @@ async function eventPrint(event, bot) {
                 if (!isPrelaunch) {
                     await bot.telegram.sendMessage(
                         TELEGRAM.CHANNEL,
-                        getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails),
+                        await getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails),
                         {
                             parse_mode: 'HTML',
                             disable_web_page_preview: true,

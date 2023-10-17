@@ -192,7 +192,8 @@ ${formated.prelaunchCalls
             tg = ` | <a href="${tgUrl}">💠Telegram</a>`;
         }
     }
-    const db_networks = await pool.query(`SELECT * FROM networks WHERE token_address = $1`, [tokenInfo.address])?.rows[0];
+    const db_networks = await pool.query(`SELECT * FROM networks WHERE token_address = $1`, [tokenInfo.address])?.rows;
+    console.log(db_networks)
     if (!db_networks?.token_address) {
         await pool.query(`INSERT INTO networks (token_address, twitter, telegram) VALUES ($1, $2, $3)`, [tokenInfo.address, twitterUrl, tgUrl]);
     } else {

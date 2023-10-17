@@ -219,7 +219,7 @@ async function eventPrint(event, bot) {
                 if (!isPrelaunch) {
                     await bot.telegram.sendMessage(
                         TELEGRAM.CHANNEL,
-                        await getFirstCallText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, tgUrl, twitterUrl),
+                        await getFirstCallText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message),
                         {
                             parse_mode: 'HTML',
                             disable_web_page_preview: true
@@ -228,7 +228,7 @@ async function eventPrint(event, bot) {
                 } else {
                     await bot.telegram.sendMessage(
                         TELEGRAM.CHANNEL,
-                        await getPreCallText(tokenInfo, channelInnerLink, channelTitle, message, tgUrl, twitterUrl),
+                        await getPreCallText(tokenInfo, channelInnerLink, channelTitle, message),
                         {
                             parse_mode: 'HTML',
                             disable_web_page_preview: true
@@ -272,7 +272,7 @@ async function eventPrint(event, bot) {
                 if (!isPrelaunch) {
                     await bot.telegram.sendMessage(
                         TELEGRAM.CHANNEL,
-                        await getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails, tgUrl, twitterUrl),
+                        await getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails),
                         {
                             parse_mode: 'HTML',
                             disable_web_page_preview: true,
@@ -282,7 +282,7 @@ async function eventPrint(event, bot) {
                 } else {
                     await bot.telegram.sendMessage(
                         TELEGRAM.CHANNEL,
-                        await getPreCallText(tokenInfo, channelInnerLink, channelTitle, message, tgUrl, twitterUrl),
+                        await getPreCallText(tokenInfo, channelInnerLink, channelTitle, message),
                         {
                             parse_mode: 'HTML',
                             disable_web_page_preview: true,

@@ -96,7 +96,7 @@ function formatTotal(data) {
 
 async function getTotalText(tokenInfo, channelsDetails, tgUrl, twitterUrl) {
     const formated = formatTotal(channelsDetails);
-
+    console.log('---------------------all info: ', tgUrl, twitterUrl);
     const prelaunchText = `${formated.prelaunchCalls[0] ? "\n<b>ПРЕДСТАРТОВЫЕ ВЫЗОВЫ</b>" : ""
         }
 ${formated.prelaunchCalls
@@ -210,37 +210,8 @@ async function getFirstCallText(
     tokenDetailsForMessage,
     channelInnerLink,
     channelTitle,
-    message, tgUrl, twitterUrl
+    message
 ) {
-    const networks = await social_network(tokenInfo.address, tokenInfo.chain == 'ether' ? 1 : 56);
-    console.log('networks: ', networks)
-    let website = '';
-    let tg = '';
-    let twitter = '';
-    let git = '';
-    let schat = '';
-    let youtube = '';
-    if (networks) {
-        if (twitterUrl) {
-            twitter = ` | <a href="${twitterUrl}">💠Twitter</a>`;
-        } else {
-            twitter = networks?.twitter ? ` | <a href="${networks?.twitter}">💠Twitter</a>` : '';
-        }
-        if (tgUrl) {
-            tg = ` | <a href="${tgUrl}">💠Telegram</a>`;
-        } else {
-            tg = networks?.telegram ? ` | <a href="${networks?.telegram}">💠Telegram</a>` : '';
-        }
-        website = networks?.website ? `<a href="${networks?.website}">💠Сайт</a>` : '';
-        git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
-        schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
-        youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
-    } else {
-        twitter = ` | <a href="${twitterUrl ? twitterUrl : ''}">💠Twitter</a>`;
-        tg = ` | <a href="${tgUrl ? tgUrl : ''}">💠Telegram</a>`;
-    }
-    const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
-    console.log('networks text ', socialLinks)
     return `<b>🟩ПЕРВЫЙ ЗАПРОС - </b> <a href="https://t.me/${escapeHtmlEntities(
         channelInnerLink
     )}/${escapeHtmlEntities(message.id)}">${escapeHtmlEntities(
@@ -265,40 +236,10 @@ CA: <code href="#">${tokenInfo.address}</code>
         }/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === "ether" ? "ethereum" : "bsc"
         }/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address
         }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> 
-${socialLinks}
 <b>Заходи в ${TELEGRAM.CHANNEL} чтобы узнавать о новых токенах первым</b>`;
 }
 
-async function getPreCallText(tokenInfo, channelInnerLink, channelTitle, message, tgUrl, twitterUrl) {
-    const networks = await social_network(tokenInfo.address, tokenInfo.chain == 'ether' ? 1 : 56);
-    console.log('networks: ', networks)
-    let website = '';
-    let tg = '';
-    let twitter = '';
-    let git = '';
-    let schat = '';
-    let youtube = '';
-    if (networks) {
-        if (twitterUrl) {
-            twitter = ` | <a href="${twitterUrl}">💠Twitter</a>`;
-        } else {
-            twitter = networks?.twitter ? ` | <a href="${networks?.twitter}">💠Twitter</a>` : '';
-        }
-        if (tgUrl) {
-            tg = ` | <a href="${tgUrl}">💠Telegram</a>`;
-        } else {
-            tg = networks?.telegram ? ` | <a href="${networks?.telegram}">💠Telegram</a>` : '';
-        }
-        website = networks?.website ? `<a href="${networks?.website}">💠Сайт</a>` : '';
-        git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
-        schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
-        youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
-    } else {
-        twitter = ` | <a href="${twitterUrl ? twitterUrl : ''}">💠Twitter</a>`;
-        tg = ` | <a href="${tgUrl ? tgUrl : ''}">💠Telegram</a>`;
-    }
-    const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
-    console.log('networks text ', socialLinks)
+async function getPreCallText(tokenInfo, channelInnerLink, channelTitle, message) {
     return `<b>🟩ЗАПРОС ПЕРЕД ЗАПУСКОМ - </b> <a href="https://t.me/${escapeHtmlEntities(
         channelInnerLink
     )}/${escapeHtmlEntities(message.id)}">${escapeHtmlEntities(
@@ -314,40 +255,10 @@ ECA: <code href="#">${tokenInfo.address}</code>
         }/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === "ether" ? "ethereum" : "bsc"
         }/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address
         }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> 
-${socialLinks}
 <b>Заходи в ${TELEGRAM.CHANNEL} чтобы узнавать о новых токенах первым</b>`;
 }
 
-async function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails, tgUrl, twitterUrl) {
-    const networks = await social_network(tokenInfo.address, tokenInfo.chain == 'ether' ? 1 : 56);
-    console.log('networks: ', networks);
-    let website = '';
-    let tg = '';
-    let twitter = '';
-    let git = '';
-    let schat = '';
-    let youtube = '';
-    if (networks) {
-        if (twitterUrl) {
-            twitter = ` | <a href="${twitterUrl}">💠Twitter</a>`;
-        } else {
-            twitter = networks?.twitter ? ` | <a href="${networks?.twitter}">💠Twitter</a>` : '';
-        }
-        if (tgUrl) {
-            tg = ` | <a href="${tgUrl}">💠Telegram</a>`;
-        } else {
-            tg = networks?.telegram ? ` | <a href="${networks?.telegram}">💠Telegram</a>` : '';
-        }
-        website = networks?.website ? `<a href="${networks?.website}">💠Сайт</a>` : '';
-        git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
-        schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
-        youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
-    } else {
-        twitter = ` | <a href="${twitterUrl ? twitterUrl : ''}">💠Twitter</a>`;
-        tg = ` | <a href="${tgUrl ? tgUrl : ''}">💠Telegram</a>`;
-    }
-    const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
-    console.log('networks text: ', socialLinks)
+async function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails) {
     return (
         `<b>🟩НОВЫЙ ЗАПРОС -</b> <a href="https://t.me/${escapeHtmlEntities(channelInnerLink)}/${escapeHtmlEntities(message.id)}">${escapeHtmlEntities(channelTitle)}</a> запрошено ${escapeHtmlEntities(tokenInfo.key_name)}
 
@@ -373,7 +284,6 @@ CA: <code href="#">${tokenInfo.address}</code>
         }/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === "ether" ? "ethereum" : "bsc"
         }/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address
         }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a>
-${socialLinks}
 
 <b>Заходи в ${TELEGRAM.CHANNEL} чтобы узнавать о новых токенах первым</b>`)
 }

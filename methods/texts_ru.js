@@ -1,5 +1,6 @@
 const { TELEGRAM, getROI, social_network } = require("../constants");
 const { sleep } = require("../src/helpers/utils");
+const pool = require('./database');
 
 function formatDateToUTC(timestamp) {
     const date = new Date(parseInt(timestamp, 10));
@@ -191,6 +192,26 @@ ${formated.prelaunchCalls
             tg = ` | <a href="${tgUrl}">💠Telegram</a>`;
         }
     }
+    const db_networks = await pool.query(`SELECT * FROM networks WHERE token_address = $1`, [tokenInfo.address]).rows[0];
+    if (!db_networks?.token_address) {
+        await pool.query(`INSERT INTO networks (token_address, twitter, telegram) VALUES ($1, $2, $3)`, [tokenInfo.address, twitterUrl, tgUrl]);
+    } else {
+        if (db_networks?.twitter) {
+            twitter = ` | <a href="${db_networks?.twitter}">💠Twitter</a>`;
+        } else {
+            if (twitterUrl) {
+                await pool.query(`UPDATE networks SET twitter = $2 WHERE token_address = $1`, [tokenInfo.address, twitterUrl]);
+            }
+        }
+        if (db_networks?.telegram) {
+            tg = ` | <a href="${db_networks?.telegram}">💠Telegram</a>`;
+        } else {
+            if (tgUrl) {
+                await pool.query(`UPDATE networks SET telegram = $2 WHERE token_address = $1`, [tokenInfo.address, tgUrl]);
+            }
+        }
+    }
+
     const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
     if (socialLinks[0] == '|') {
         socialLinks = socialLinks.slice(1);

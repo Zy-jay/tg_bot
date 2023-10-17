@@ -296,7 +296,7 @@ async function eventPrint(event, bot) {
 
                 await bot.telegram.editMessageText(
                     TELEGRAM.CHANNEL,
-                    tokenDbData.total_message_id,
+                    tokenDbData.total_message_id, // message id
                     undefined,
                     await getTotalText(tokenInfo, channelsDetails, tgUrl, twitterUrl),
                     {

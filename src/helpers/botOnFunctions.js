@@ -178,7 +178,7 @@ const list = async (ctx) => {
             message = messageString.slice(start, end)
             start = start + max_size
             end = end + max_size
-            await ctx.reply(message);
+            await ctx.reply(`${i}. `, message);
         }
     } catch (error) {
         console.log(error);

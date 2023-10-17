@@ -26,6 +26,11 @@ async function eventPrint(event, bot) {
         const mixedText = messageText + " " + entitiesURLs.join(" ");
 
         const regex = /0x[a-fA-F0-9]{40}/g;
+        const tgRegex = /0x[a-fA-F0-9]{40}|https:\/\/t\.me\/([^\/\s]+)/g;
+        const twitterRegex = /0x[a-fA-F0-9]{40}|https:\/\/x\.com\/([^\/\s]+)/g;
+
+        const tgUrl = [...new Set(mixedText.match(tgRegex) || [])][0];
+        const twitterUrl = [...new Set(mixedText.match(twitterRegex) || [])][0];
         const matches = [...new Set(mixedText.match(regex) || [])].filter(e => e !== '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2');
         console.log('matches:', matches);
 
@@ -214,7 +219,7 @@ async function eventPrint(event, bot) {
                 if (!isPrelaunch) {
                     await bot.telegram.sendMessage(
                         TELEGRAM.CHANNEL,
-                        getFirstCallText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message),
+                        await getFirstCallText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, tgUrl, twitterUrl),
                         {
                             parse_mode: 'HTML',
                             disable_web_page_preview: true
@@ -223,7 +228,7 @@ async function eventPrint(event, bot) {
                 } else {
                     await bot.telegram.sendMessage(
                         TELEGRAM.CHANNEL,
-                        getPreCallText(tokenInfo, channelInnerLink, channelTitle, message),
+                        await getPreCallText(tokenInfo, channelInnerLink, channelTitle, message, tgUrl, twitterUrl),
                         {
                             parse_mode: 'HTML',
                             disable_web_page_preview: true
@@ -236,7 +241,7 @@ async function eventPrint(event, bot) {
 
                 const totalMessage = await bot.telegram.sendMessage(
                     TELEGRAM.CHANNEL,
-                    await getTotalText(tokenInfo, channelsDetails),
+                    await getTotalText(tokenInfo, channelsDetails, tgUrl, twitterUrl),
                     {
                         parse_mode: 'HTML',
                         disable_web_page_preview: true
@@ -267,7 +272,7 @@ async function eventPrint(event, bot) {
                 if (!isPrelaunch) {
                     await bot.telegram.sendMessage(
                         TELEGRAM.CHANNEL,
-                        await getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails),
+                        await getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails, tgUrl, twitterUrl),
                         {
                             parse_mode: 'HTML',
                             disable_web_page_preview: true,
@@ -277,7 +282,7 @@ async function eventPrint(event, bot) {
                 } else {
                     await bot.telegram.sendMessage(
                         TELEGRAM.CHANNEL,
-                        getPreCallText(tokenInfo, channelInnerLink, channelTitle, message),
+                        await getPreCallText(tokenInfo, channelInnerLink, channelTitle, message, tgUrl, twitterUrl),
                         {
                             parse_mode: 'HTML',
                             disable_web_page_preview: true,
@@ -290,7 +295,7 @@ async function eventPrint(event, bot) {
                     TELEGRAM.CHANNEL,
                     tokenDbData.total_message_id,
                     undefined,
-                    await getTotalText(tokenInfo, channelsDetails),
+                    await getTotalText(tokenInfo, channelsDetails, tgUrl, twitterUrl),
                     {
                         parse_mode: 'HTML',
                         disable_web_page_preview: true

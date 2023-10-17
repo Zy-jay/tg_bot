@@ -156,7 +156,7 @@ ${formated.prelaunchCalls
                 result.push(res);
             }
             console.log(result);
-            return result.join('\n');
+            return result.join('');
         })
     );
 
@@ -238,7 +238,7 @@ ${formated.prelaunchCalls
 
     return `<b>🟩TOTAL CALLS </b> ${escapeHtmlEntities(tokenInfo.key_name)} - ${channelsDetails.length}
 
-<b>Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)} \n ${formated.prelaunchCalls[0] ? prelaunchText : ""
+<b>⬜️Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)} \n ${formated.prelaunchCalls[0] ? prelaunchText : ""
         } 
 ${formated.result[0] ? launched : "\n"}
 <b>Адрес Токена:</b> <code href="#">${tokenInfo.address}</code>
@@ -268,7 +268,7 @@ async function getFirstCallText(
         channelTitle
     )}</a> запрошено ${escapeHtmlEntities(tokenInfo.key_name)}
 
-<b>Название токена:</b> ${escapeHtmlEntities(tokenInfo.name)}
+<b>⬜️Название токена:</b> ${escapeHtmlEntities(tokenInfo.name)}
 
 <b>Капитализация:</b> ${addNumberSeparators(tokenInfo?.market_cap || 0) || "нет данных"
         } | <b>Объем за 24 часа:</b> ${addNumberSeparators(tokenDetailsForMessage.volume24) || "нет данных"
@@ -296,7 +296,7 @@ async function getPreCallText(tokenInfo, channelInnerLink, channelTitle, message
         channelTitle
     )}</a> запрошено ${escapeHtmlEntities(tokenInfo.key_name)}
 
-<b>Название Токена: </b> ${escapeHtmlEntities(tokenInfo.name)}
+<b>⬜️Название Токена: </b> ${escapeHtmlEntities(tokenInfo.name)}
 <b>Адрес Токена:</b> <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === "ether" ? "ether" : "bnb"
@@ -316,7 +316,7 @@ async function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink
             channelsDetails.length
         )}
 
-<b>Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)}
+<b>⬜️Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)}
 
 <b>Капитализация:</b> ${addNumberSeparators(tokenInfo?.market_cap || 0) || "нет данных"
         } | <b>Объем за 24 часа:</b> ${addNumberSeparators(tokenDetailsForMessage.volume24) || "нет данных"

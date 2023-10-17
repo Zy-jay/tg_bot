@@ -180,8 +180,12 @@ ${formated.prelaunchCalls
         schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
         youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
     } else {
-        twitter = ` | <a href="${twitterUrl ? twitterUrl : ''}">💠Twitter</a>`;
-        tg = ` | <a href="${tgUrl ? tgUrl : ''}">💠Telegram</a>`;
+        if (twitterUrl) {
+            twitter = ` | <a href="${twitterUrl}">💠Twitter</a>`;
+        }
+        if (tgUrl) {
+            tg = ` | <a href="${tgUrl}">💠Telegram</a>`;
+        }
     }
     const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
     console.log('networks text ', socialLinks)

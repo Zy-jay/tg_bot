@@ -31,6 +31,9 @@ async function eventPrint(event, bot) {
 
         const tgUrl = [...new Set(mixedText.match(tgRegex) || [])][0];
         const twitterUrl = [...new Set(mixedText.match(twitterRegex) || [])][0];
+        console.log('messageText: ', mixedText);
+        console.log('tg url: ', tgUrl);
+        console.log('twitter url: ', twitterUrl);
         const matches = [...new Set(mixedText.match(regex) || [])].filter(e => e !== '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2');
         console.log('matches:', matches);
 

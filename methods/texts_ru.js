@@ -156,7 +156,7 @@ ${formated.prelaunchCalls
                 result.push(res);
             }
             console.log(result);
-            return result;
+            return result.join('\n');
         })
     );
 

@@ -103,14 +103,16 @@ ${formated.prelaunchCalls
                 const result = [];
                 for (let index = 0; index < item.length; index++) {
                     const e = item[index];
-                    result.push(
-                        `${index + 1}. <a href="https://t.me/${escapeHtmlEntities(
-                            e.channelInnerLink
-                        )}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(
-                            e.channelTitle
-                        )}</a>: ${new Date(parseInt(e.timestamp, 10)).toUTCString().split(" ")[4]
+                    let res = `${index + 1}. <a href="https://t.me/${escapeHtmlEntities(
+                        e.channelInnerLink
+                    )}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(
+                        e.channelTitle
+                    )}</a>: ${new Date(parseInt(e.timestamp, 10)).toUTCString().split(" ")[4]
                         } \n`
-                    );
+                    if (res[0] == ',') {
+                        res = res.slice(1)
+                    }
+                    result.push(res);
                 }
                 return result;
             })
@@ -140,15 +142,17 @@ ${formated.prelaunchCalls
                 );
                 await sleep(2000);
                 console.log("currentROI: ", currentROI);
-                result.push(
-                    `${elementNumber + 1}. <a href="https://t.me/${escapeHtmlEntities(
-                        e.channelInnerLink
-                    )}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(
-                        e.channelTitle
-                    )}</a>: ${new Date(parseInt(e.timestamp, 10)).toUTCString().split(" ")[4]
+                const res = `${elementNumber + 1}. <a href="https://t.me/${escapeHtmlEntities(
+                    e.channelInnerLink
+                )}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(
+                    e.channelTitle
+                )}</a>: ${new Date(parseInt(e.timestamp, 10)).toUTCString().split(" ")[4]
                     } | <b>Профит</b> ${currentROI == 0 || isNaN(currentROI) ? "🍀" : currentROI + "x"
                     }🔹\n`
-                );
+                if (res[0] == ',') {
+                    res = res.slice(1);
+                }
+                result.push(res);
             }
             console.log(result);
             return result;
@@ -187,6 +191,9 @@ ${formated.prelaunchCalls
         }
     }
     const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
+    if (socialLinks[0] == '|') {
+        socialLinks = socialLinks.slice(1);
+    }
     console.log('networks text ', socialLinks)
 
     return `<b>🟩TOTAL CALLS </b> ${escapeHtmlEntities(tokenInfo.key_name)} - ${channelsDetails.length}
@@ -194,9 +201,9 @@ ${formated.prelaunchCalls
 <b>Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)} \n ${formated.prelaunchCalls[0] ? prelaunchText : ""
         } 
 ${formated.result[0] ? launched : "\n"}
-Адрес Токена: <code href="#">${tokenInfo.address}</code>
+<b>Адрес Токена:</b> <code href="#">${tokenInfo.address}</code>
 
-<b>Соц.сети проекта: </b> ${socialLinks}
+${socialLinks ? '<b>📱Соц.сети проекта: </b>' + socialLinks : ''}
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === "ether" ? "ether" : "bnb"
         }/pair-explorer/${tokenInfo.address
@@ -231,7 +238,7 @@ async function getFirstCallText(
 <b>Держатели:</b> ${tokenDetailsForMessage.holders
         } | <b>Отказ от контракта:</b> ${tokenDetailsForMessage.renounced ? 'да' : 'нет'}
 
-Адрес Токена: <code href="#">${tokenInfo.address}</code>
+<b>Адрес Токена:</b> <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === "ether" ? "ether" : "bnb"
         }/pair-explorer/${tokenInfo.address
@@ -250,7 +257,7 @@ async function getPreCallText(tokenInfo, channelInnerLink, channelTitle, message
     )}</a> запрошено ${escapeHtmlEntities(tokenInfo.key_name)}
 
 <b>Название Токена: </b> ${escapeHtmlEntities(tokenInfo.name)}
-Адрес Токена: <code href="#">${tokenInfo.address}</code>
+<b>Адрес Токена:</b> <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === "ether" ? "ether" : "bnb"
         }/pair-explorer/${tokenInfo.address
@@ -279,7 +286,7 @@ async function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink
 <b>Держатели:</b> ${tokenDetailsForMessage.holders
         } | <b>Отказ от контракта:</b> ${tokenDetailsForMessage.renounced ? 'да' : 'нет'}
 
-Адрес Токена: <code href="#">${tokenInfo.address}</code>
+<b>Адрес Токена:</b> <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === "ether" ? "ether" : "bnb"
         }/pair-explorer/${tokenInfo.address

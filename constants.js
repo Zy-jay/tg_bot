@@ -68,7 +68,7 @@ const getROI = async (pair, chainId, time) => {
   let highPrice = 0;
   let firstPrice = undefined;
   const now = Math.floor(new Date().getTime() / 1000);
-  console.log("data params: ", pair, chainId, time);
+//   console.log("data params: ", pair, chainId, time);
   const pairs = await fetch(
     `https://api.dextools.io/v1/token?chain=${
       chainId == 1 ? "ether" : "bsc"
@@ -80,7 +80,7 @@ const getROI = async (pair, chainId, time) => {
     }
   ).then((res) => res.json());
   if (pairs.errorCode) {
-    console.log(pairs);
+    // console.log(pairs);
     let data = await fetch(
       `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=1S&chainId=${chainId}`
     ).then((res) => res.json());
@@ -92,19 +92,19 @@ const getROI = async (pair, chainId, time) => {
     for (const i in data) {
       if (data[i].time >= time) {
         if (firstPrice === undefined) {
-          console.log("Start data", data[i]);
+        //   console.log("Start data", data[i]);
           firstPrice = data[i].open;
         }
         if (data[i].high > highPrice) {
-          console.log("Start data", data[i]);
+        //   console.log("High data", data[i]);
           highPrice = data[i].high;
         }
       }
     }
-    console.log("high price:", highPrice);
-    console.log("open price:", firstPrice);
+    // console.log("high price:", highPrice);
+    // console.log("open price:", firstPrice);
     const ROI = (highPrice / firstPrice).toFixed(2);
-    console.log("ROI IN FUNC: ", ROI);
+    // console.log("ROI IN FUNC: ", ROI);
     return ROI;
   }
   let data = await fetch(
@@ -117,21 +117,21 @@ const getROI = async (pair, chainId, time) => {
   for (const i in data) {
     if (data[i].time >= time) {
       if (firstPrice === undefined) {
-        console.log("Start data", data[i]);
+        // console.log("Start data", data[i]);
         firstPrice = data[i].open;
       }
       if (data[i].high > highPrice) {
-        console.log("Start data", data[i]);
+        // console.log("Start data", data[i]);
         highPrice = data[i].high;
       }
     }
   }
 
-  console.log("high price:", highPrice);
-  console.log("open price:", firstPrice);
+//   console.log("high price:", highPrice);
+//   console.log("open price:", firstPrice);
 
   const ROI = (highPrice / firstPrice).toFixed(2);
-  console.log("ROI IN FUNC: ", ROI);
+//   console.log("ROI IN FUNC: ", ROI);
   return ROI;
 };
 
@@ -161,7 +161,7 @@ const social_network = async (tokenAddress, chainId) => {
         twitter: res?.twitter,
         website: res?.website,
       };
-      console.log(resObj);
+    //   console.log(resObj);
       return resObj;
     }
     const data = await fetch(
@@ -174,7 +174,7 @@ const social_network = async (tokenAddress, chainId) => {
       twitter: res?.twitter,
       website: res?.website,
     };
-    console.log(resObj);
+    // console.log(resObj);
     return resObj;
   }
   const res = JSON.parse(data.poolDetails);
@@ -188,7 +188,7 @@ const social_network = async (tokenAddress, chainId) => {
     sourceChat: res?.g,
     youtube: res?.s,
   };
-  console.log(resObj);
+//   console.log(resObj);
   return resObj;
 };
 

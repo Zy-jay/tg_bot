@@ -169,7 +169,7 @@ const uninit_tops = async (ctx, bot) => {
 const list = async (ctx) => {
     try {
         const allChannels = (await pool.query(QUERIES.getChannelsByBotNumber, [TELEGRAM.BOT_NUMBER])).rows;
-        const messageString = allChannels.map(e => e.link).filter(e => e).join('\n') || 'No channels';
+        const messageString = allChannels.map((e, i) => `${i + 1}. ` + e.link).filter(e => e).join('\n') || 'No channels';
         let max_size = 4000;
         let amountSliced = messageString.length / max_size;
         let start = 0;
@@ -178,7 +178,7 @@ const list = async (ctx) => {
             message = messageString.slice(start, end)
             start = start + max_size
             end = end + max_size
-            await ctx.reply(`${i}. `, message);
+            await ctx.reply(message);
         }
     } catch (error) {
         console.log(error);

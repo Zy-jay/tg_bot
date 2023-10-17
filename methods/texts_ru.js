@@ -213,7 +213,7 @@ ${formated.prelaunchCalls
         }
     }
 
-    const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
+    let socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
     if (socialLinks[0] == '|') {
         socialLinks = socialLinks.slice(1);
     }

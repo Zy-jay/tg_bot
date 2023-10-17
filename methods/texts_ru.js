@@ -162,7 +162,6 @@ ${formated.prelaunchCalls
     );
 
     const networks = await social_network(tokenInfo.address, tokenInfo.chain == 'ether' ? 1 : 56);
-    console.log('networks: ', networks)
     let website = '';
     let tg = '';
     let twitter = '';
@@ -192,10 +191,29 @@ ${formated.prelaunchCalls
             tg = ` | <a href="${tgUrl}">💠Telegram</a>`;
         }
     }
+
+    console.log('-----------------formated result', formated.result[0]);
+    console.log('-----------------launched', launched)
     const db_networks = await pool.query(`SELECT * FROM networks WHERE token_address = $1`, [tokenInfo.address])?.rows;
-    console.log(db_networks)
     if (!db_networks?.token_address) {
-        await pool.query(`INSERT INTO networks (token_address, twitter, telegram) VALUES ($1, $2, $3)`, [tokenInfo.address, twitterUrl, tgUrl]);
+        try {
+            await pool.query(`INSERT INTO networks (token_address, twitter, telegram) VALUES ($1, $2, $3)`, [tokenInfo.address, twitterUrl, tgUrl]);
+        } catch (e) {
+            if (db_networks?.twitter) {
+                twitter = ` | <a href="${db_networks?.twitter}">💠Twitter</a>`;
+            } else {
+                if (twitterUrl) {
+                    await pool.query(`UPDATE networks SET twitter = $2 WHERE token_address = $1`, [tokenInfo.address, twitterUrl]);
+                }
+            }
+            if (db_networks?.telegram) {
+                tg = ` | <a href="${db_networks?.telegram}">💠Telegram</a>`;
+            } else {
+                if (tgUrl) {
+                    await pool.query(`UPDATE networks SET telegram = $2 WHERE token_address = $1`, [tokenInfo.address, tgUrl]);
+                }
+            }
+        }
     } else {
         if (db_networks?.twitter) {
             twitter = ` | <a href="${db_networks?.twitter}">💠Twitter</a>`;

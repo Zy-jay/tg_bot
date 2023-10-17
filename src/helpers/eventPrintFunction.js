@@ -26,8 +26,8 @@ async function eventPrint(event, bot) {
         const mixedText = messageText + " " + entitiesURLs.join(" ");
 
         const regex = /0x[a-fA-F0-9]{40}/g;
-        const tgRegex = /0x[a-fA-F0-9]{40}|https:\/\/t\.me\/([^\/\s]+)/g;
-        const twitterRegex = /0x[a-fA-F0-9]{40}|https:\/\/x\.com\/([^\/\s]+)/g;
+        const tgRegex = /https:\/\/t\.me\/([^\/\s]+)/g;
+        const twitterRegex = /https:\/\/x\.com\/([^\/\s]+)/g;
 
         const tgUrl = [...new Set(mixedText.match(tgRegex) || [])][0];
         const twitterUrl = [...new Set(mixedText.match(twitterRegex) || [])][0];

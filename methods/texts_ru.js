@@ -96,7 +96,6 @@ function formatTotal(data) {
 
 async function getTotalText(tokenInfo, channelsDetails, tgUrl, twitterUrl) {
     const formated = formatTotal(channelsDetails);
-    console.log('---------------------all info: ', tgUrl, twitterUrl);
     const prelaunchText = `${formated.prelaunchCalls[0] ? "\n<b>PRELAUNCH CALL</b>" : ""
         }
 ${formated.prelaunchCalls
@@ -190,9 +189,7 @@ ${formated.prelaunchCalls
     const socialLinks = `${website}${tg}${twitter}${git}${schat}${youtube}`.trim();
     console.log('networks text ', socialLinks)
 
-    return `<b>🟩TOTAL CALLS </b> ${escapeHtmlEntities(
-        tokenInfo.key_name
-    )} - ${channelsDetails.length}
+    return `<b>🟩TOTAL CALLS </b> ${escapeHtmlEntities(tokenInfo.key_name)} - ${channelsDetails.length}
 
 <b>Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)} \n ${formated.prelaunchCalls[0] ? prelaunchText : ""
         } 

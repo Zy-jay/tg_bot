@@ -169,25 +169,25 @@ ${formated.prelaunchCalls
     let youtube = '';
     if (networks) {
         if (twitterUrl) {
-            twitter = ` | <a href="${twitterUrl}">💠Twitter</a>`;
+            twitter = ` | <a href="${twitterUrl}">Twitter</a>`;
         } else {
-            twitter = networks?.twitter ? ` | <a href="${networks?.twitter}">💠Twitter</a>` : '';
+            twitter = networks?.twitter ? ` | <a href="${networks?.twitter}">Twitter</a>` : '';
         }
         if (tgUrl) {
-            tg = ` | <a href="${tgUrl}">💠Telegram</a>`;
+            tg = ` | <a href="${tgUrl}">Telegram</a>`;
         } else {
-            tg = networks?.telegram ? ` | <a href="${networks?.telegram}">💠Telegram</a>` : '';
+            tg = networks?.telegram ? ` | <a href="${networks?.telegram}">Telegram</a>` : '';
         }
-        website = networks?.website ? `<a href="${networks?.website}">💠Сайт</a>` : '';
+        website = networks?.website ? `<a href="${networks?.website}">Сайт</a>` : '';
         git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
-        schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">💠SourceChat</a>` : '';
-        youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">💠Youtube</a>` : '';
+        schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">SourceChat</a>` : '';
+        youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">Youtube</a>` : '';
     } else {
         if (twitterUrl) {
-            twitter = ` | <a href="${twitterUrl}">💠Twitter</a>`;
+            twitter = ` | <a href="${twitterUrl}">Twitter</a>`;
         }
         if (tgUrl) {
-            tg = ` | <a href="${tgUrl}">💠Telegram</a>`;
+            tg = ` | <a href="${tgUrl}">Telegram</a>`;
         }
     }
 
@@ -199,14 +199,14 @@ ${formated.prelaunchCalls
             await pool.query(`INSERT INTO networks (token_address, twitter, telegram) VALUES ($1, $2, $3)`, [tokenInfo.address, twitterUrl, tgUrl]);
         } catch (e) {
             if (db_networks?.twitter) {
-                twitter = ` | <a href="${db_networks?.twitter}">💠Twitter</a>`;
+                twitter = ` | <a href="${db_networks?.twitter}">Twitter</a>`;
             } else {
                 if (twitterUrl) {
                     await pool.query(`UPDATE networks SET twitter = $2 WHERE token_address = $1`, [tokenInfo.address, twitterUrl]);
                 }
             }
             if (db_networks?.telegram) {
-                tg = ` | <a href="${db_networks?.telegram}">💠Telegram</a>`;
+                tg = ` | <a href="${db_networks?.telegram}">Telegram</a>`;
             } else {
                 if (tgUrl) {
                     await pool.query(`UPDATE networks SET telegram = $2 WHERE token_address = $1`, [tokenInfo.address, tgUrl]);
@@ -215,14 +215,14 @@ ${formated.prelaunchCalls
         }
     } else {
         if (db_networks?.twitter) {
-            twitter = ` | <a href="${db_networks?.twitter}">💠Twitter</a>`;
+            twitter = ` | <a href="${db_networks?.twitter}">Twitter</a>`;
         } else {
             if (twitterUrl) {
                 await pool.query(`UPDATE networks SET twitter = $2 WHERE token_address = $1`, [tokenInfo.address, twitterUrl]);
             }
         }
         if (db_networks?.telegram) {
-            tg = ` | <a href="${db_networks?.telegram}">💠Telegram</a>`;
+            tg = ` | <a href="${db_networks?.telegram}">Telegram</a>`;
         } else {
             if (tgUrl) {
                 await pool.query(`UPDATE networks SET telegram = $2 WHERE token_address = $1`, [tokenInfo.address, tgUrl]);

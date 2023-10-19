@@ -248,10 +248,11 @@ async function getROITops() {
         tokens.sort((a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10));
     }
 
+    const tokensInfo = (await pool.query(`SELECT * FROM tokens`)).rows;
+
     const ROIs = sortedByTokens.map(async calls => {
 
         const result = [];
-        const tokensInfo = (await pool.query(`SELECT * FROM tokens`)).rows;
 
         for (let index = 0; index < calls.length; index++) {
             const call = calls[index];

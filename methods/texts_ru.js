@@ -179,7 +179,7 @@ ${formated.prelaunchCalls
             tg = networks?.telegram ? ` | <a href="${networks?.telegram}">Telegram</a>` : '';
         }
         website = networks?.website ? `<a href="${networks?.website}">Сайт</a>` : '';
-        git = networks?.github ? ` | <a href="${networks?.github}">💠Github</a>` : '';
+        git = networks?.github ? ` | <a href="${networks?.github}">Github</a>` : '';
         schat = networks?.sourceChat ? ` | <a href="${networks?.sourceChat}">SourceChat</a>` : '';
         youtube = networks?.youtube ? ` | <a href="${networks?.youtube}">Youtube</a>` : '';
     } else {

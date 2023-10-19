@@ -238,8 +238,8 @@ ${formated.prelaunchCalls
 
     return `<b>🟩TOTAL CALLS </b> ${escapeHtmlEntities(tokenInfo.key_name)} - ${channelsDetails.length}
 
-<b>◽Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)} \n ${formated.prelaunchCalls[0] ? prelaunchText : ""
-        } 
+<b>◽Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)} \n ${formated.prelaunchCalls[0] ? prelaunchText : "" 
+        } \n
 ${formated.result[0] ? launched : "\n"}
 <b>Адрес Токена:</b> <code href="#">${tokenInfo.address}</code>
 
@@ -250,9 +250,9 @@ ${socialLinks ? '<b>📱Соц.сети проекта: </b>' + socialLinks : ''
         }">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === "ether" ? "eth" : "bsc"
         }/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === "ether" ? "ethereum" : "bsc"
         }/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address
-        }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> 
+        }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> \n
 
-<b>Подпишись на ${TELEGRAM.CHANNEL} \nчтобы первым найти перспективные токены</b>
+<b>Подпишись на ${TELEGRAM.CHANNEL} чтобы первым найти перспективные токены</b>
 `;
 }
 async function getFirstCallText(
@@ -268,8 +268,7 @@ async function getFirstCallText(
         channelTitle
     )}</a> called ${escapeHtmlEntities(tokenInfo.key_name)}
 
-<b>◽Название токена:</b> ${escapeHtmlEntities(tokenInfo.name)}
-
+<b>◽Название токена:</b> ${escapeHtmlEntities(tokenInfo.name)} \n
 <b>Капитализация:</b> ${addNumberSeparators(tokenInfo?.market_cap || 0) || "нет данных"
         } | <b>Объем за 24 часа:</b> ${addNumberSeparators(tokenDetailsForMessage.volume24) || "нет данных"
         } | <b>Ликвидность:</b> ${addNumberSeparators(
@@ -285,8 +284,8 @@ async function getFirstCallText(
         }">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === "ether" ? "eth" : "bsc"
         }/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === "ether" ? "ethereum" : "bsc"
         }/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address
-        }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> 
-<b>Подпишись на ${TELEGRAM.CHANNEL} \nчтобы первым найти перспективные токены</b>`;
+        }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> \n
+<b>Подпишись на ${TELEGRAM.CHANNEL} чтобы первым найти перспективные токены</b>`;
 }
 
 async function getPreCallText(tokenInfo, channelInnerLink, channelTitle, message) {
@@ -296,7 +295,7 @@ async function getPreCallText(tokenInfo, channelInnerLink, channelTitle, message
         channelTitle
     )}</a> called ${escapeHtmlEntities(tokenInfo.key_name)}
 
-<b>◽Название Токена: </b> ${escapeHtmlEntities(tokenInfo.name)}
+<b>◽Название Токена: </b> ${escapeHtmlEntities(tokenInfo.name)} \n
 <b>Адрес Токена:</b> <code href="#">${tokenInfo.address}</code>
 
 <a href="https://www.dextools.io/app/en/${tokenInfo.chain === "ether" ? "ether" : "bnb"
@@ -304,8 +303,8 @@ async function getPreCallText(tokenInfo, channelInnerLink, channelTitle, message
         }">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === "ether" ? "eth" : "bsc"
         }/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === "ether" ? "ethereum" : "bsc"
         }/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address
-        }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> 
-<b>Подпишись на ${TELEGRAM.CHANNEL} \nчтобы первым найти перспективные токены</b>`;
+        }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> \n
+<b>Подпишись на ${TELEGRAM.CHANNEL} чтобы первым найти перспективные токены</b>`;
 }
 
 async function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink, channelTitle, message, channelsDetails) {
@@ -316,7 +315,7 @@ async function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink
             channelsDetails.length
         )}
 
-<b>◽Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)}
+<b>◽Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)} \n
 
 <b>Капитализация:</b> ${addNumberSeparators(tokenInfo?.market_cap || 0) || "нет данных"
         } | <b>Объем за 24 часа:</b> ${addNumberSeparators(tokenDetailsForMessage.volume24) || "нет данных"
@@ -333,9 +332,9 @@ async function getUpdateText(tokenInfo, tokenDetailsForMessage, channelInnerLink
         }">💠Dextools</a> | <a href="https://www.dexview.com/${tokenInfo.chain === "ether" ? "eth" : "bsc"
         }/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === "ether" ? "ethereum" : "bsc"
         }/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address
-        }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a>
+        }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> \n
 
-<b>Подпишись на ${TELEGRAM.CHANNEL} \nчтобы первым найти перспективные токены</b>`)
+<b>Подпишись на ${TELEGRAM.CHANNEL} чтобы первым найти перспективные токены</b>`)
 }
 
 function getTrendingText(tops, ROITops) {

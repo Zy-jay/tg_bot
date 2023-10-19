@@ -148,7 +148,7 @@ ${formated.prelaunchCalls
                 )}/${escapeHtmlEntities(e.message_id)}">${escapeHtmlEntities(
                     e.channelTitle
                 )}</a>: ${new Date(parseInt(e.timestamp, 10)).toUTCString().split(" ")[4]
-                    } | <b>Профит</b> ${currentROI == 0 || isNaN(currentROI) ? "🍀" : parseFloat(currentROI) >= 1 ? currentROI + 'x' : (1 - parseFloat(currentROI) * 100) + '%' 
+                    } | <b>Профит</b> ${currentROI == 0 || isNaN(currentROI) ? "🍀" : parseFloat(currentROI) >= 1 ? currentROI + 'x' : '-' + (1 - parseFloat(currentROI) * 100) + '%' 
                     }🔹\n`
                 if (res[0] == ',') {
                     res = res.slice(1);

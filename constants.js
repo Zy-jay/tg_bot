@@ -64,7 +64,7 @@ const QUERIES = {
 };
 
 const getROI = async (pair, chainId, time) => {
-  time = (time / 1000).toFixed(0);
+  time = (time / 1000)?.toFixed(0);
   let highPrice = 0;
   let firstPrice = undefined;
   const now = Math.floor(new Date().getTime() / 1000);
@@ -82,7 +82,7 @@ const getROI = async (pair, chainId, time) => {
   if (pairs.errorCode) {
     // console.log(pairs);
     let data = await fetch(
-      `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=1&chainId=${chainId}`
+      `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=1S&chainId=${chainId}`
     ).then((res) => res.json());
     // console.log("data: ", data);
     if (!data?.history) return "нет данных";
@@ -103,12 +103,12 @@ const getROI = async (pair, chainId, time) => {
     }
     // console.log("high price:", highPrice);
     // console.log("open price:", firstPrice);
-    const ROI = (highPrice / firstPrice).toFixed(2);
+    const ROI = (highPrice / firstPrice)?.toFixed(2);
     // console.log("ROI IN FUNC: ", ROI);
     return ROI;
   }
   let data = await fetch(
-    `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pairs?.data?.pairs[0]?.address}?from=${time}&to=${now}&interval=1&chainId=${chainId}`
+    `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pairs?.data?.pairs[0]?.address}?from=${time}&to=${now}&interval=1S&chainId=${chainId}`
   ).then((res) => res.json());
   //   console.log("data: ", data);
   if (!data.history) return "нет данных";
@@ -130,7 +130,7 @@ const getROI = async (pair, chainId, time) => {
 //   console.log("high price:", highPrice);
 //   console.log("open price:", firstPrice);
 
-  const ROI = (highPrice / firstPrice).toFixed(2);
+  const ROI = (highPrice / firstPrice)?.toFixed(2);
 //   console.log("ROI IN FUNC: ", ROI);
   return ROI;
 };

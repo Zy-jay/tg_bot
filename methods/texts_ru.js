@@ -42,16 +42,16 @@ function addNumberSeparators(num) {
     })();
 
     if (target >= 1000000000) {
-        const formatted = (target / 1000000000).toFixed(1);
+        const formatted = (target / 1000000000)?.toFixed(1);
         return formatted.replace(/\.0$/, "") + amountSign;
     } else if (target >= 1000000) {
-        const formatted = (target / 1000000).toFixed(1);
+        const formatted = (target / 1000000)?.toFixed(1);
         return formatted.replace(/\.0$/, "") + amountSign;
     } else if (target >= 100000) {
-        const formatted = (target / 1000).toFixed(0);
+        const formatted = (target / 1000)?.toFixed(0);
         return formatted.replace(/\.0$/, "") + amountSign;
     } else if (target >= 1000) {
-        const formatted = (target / 1000).toFixed(1);
+        const formatted = (target / 1000)?.toFixed(1);
         return formatted.replace(/\.0$/, "") + amountSign;
     }
 
@@ -365,7 +365,7 @@ ${ROITops[0]
                         )}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${process.env.TELEGRAM_CHANNEL.split("@")[1]
                         }/${e.total_message_id}">Total Calls (${escapeHtmlEntities(
                             e.key_name
-                        )})</a> <b>X${parseFloat(e.ROI.toFixed(2))}</b> 🔹\n`
+                        )})</a> <b>X${parseFloat(e.ROI?.toFixed(2))}</b> 🔹\n`
                 )
                 .join("")
             : "[ тут пока ничего нет ]"

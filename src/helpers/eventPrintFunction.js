@@ -305,7 +305,7 @@ async function eventPrint(event, bot) {
                     }
                 ).catch(() => { });
             }
-
+            
             const currentMaxCap = (await pool.query(QUERIES.getCurrentMaxMarketCapByTokenAddress, [tokenInfo.address])).rows[0]?.max_market_cap;
 
             if (currentMaxCap < parseInt(tokenInfo.market_cap, 10) || !currentMaxCap) {

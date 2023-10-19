@@ -38,19 +38,19 @@ function addNumberSeparators(num) {
     })(); 
 
     if (target >= 1000000000) {
-        const formatted = (target / 1000000000).toFixed(1);
+        const formatted = (target / 1000000000)?.toFixed(1);
         return formatted.replace(/\.0$/, '') + amountSign;
 
     } else if (target >= 1000000) {
-        const formatted = (target / 1000000).toFixed(1);
+        const formatted = (target / 1000000)?.toFixed(1);
         return formatted.replace(/\.0$/, '') + amountSign;
 
     } else if (target >= 100000) {
-        const formatted = (target / 1000).toFixed(0);
+        const formatted = (target / 1000)?.toFixed(0);
         return formatted.replace(/\.0$/, '') + amountSign;
 
     } else if (target >= 1000) {
-        const formatted = (target / 1000).toFixed(1);
+        const formatted = (target / 1000)?.toFixed(1);
         return formatted.replace(/\.0$/, '') + amountSign;
     }
 
@@ -197,7 +197,7 @@ ${tops[0] ? tops.map((e, i) => (
 <b>🟢Top Calls Channels (Max ROI Daily)</b> 
 
 ${ROITops[0] ? ROITops.slice(0, 10).map((e, i) => (
-    `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(e.link)}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${TELEGRAM.CHANNEL.split('@')[1]}/${e.total_message_id}">Total Calls (${escapeHtmlEntities(e.key_name)})</a> <b>X${parseFloat(e.ROI.toFixed(2))}</b> 🔹\n`
+    `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(e.link)}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${TELEGRAM.CHANNEL.split('@')[1]}/${e.total_message_id}">Total Calls (${escapeHtmlEntities(e.key_name)})</a> <b>X${parseFloat(e.ROI?.toFixed(2))}</b> 🔹\n`
 )).join('') : '[ nothing there yet ]'}
 
 <b>(Last 24 hours)</b>

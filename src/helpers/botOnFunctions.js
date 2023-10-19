@@ -229,6 +229,7 @@ async function getTops() {
 
 async function getROITops() {
     const calls24 = (await pool.query(QUERIES.getCallDetailsByTimestamp, [+new Date() - 1000 * 60 * 60 * 24])).rows;
+    console.log('calls24: ', calls24);
 
     const sortedByTokens = calls24.reduce((acc, cur) => {
         const existingArrayIndex = acc.findIndex(subarray => subarray[0]?.address === cur.address);
@@ -244,14 +245,16 @@ async function getROITops() {
         return acc;
     }, []);
 
+    console.log('sorted by tokens: ', sortedByTokens)
+
     for (const tokens of sortedByTokens) {
         tokens.sort((a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10));
     }
 
     const tokensInfo = (await pool.query(`SELECT * FROM tokens`)).rows;
-
+    console.log('tokensInfo: ', tokensInfo);
     const ROIs = sortedByTokens.map(async calls => {
-
+        
         const result = [];
 
         for (let index = 0; index < calls.length; index++) {
@@ -273,13 +276,16 @@ async function getROITops() {
             call.ROI = await getROI(token?.address, call?.chain == 'bsc' ? 56 : 1, call?.timestamp);
             console.log(call.ROI);
         }
+        console.log('result: ', result)
 
         return result;
     });
 
     const flatRois = ROIs.flat(Infinity).filter(e => e.ROI !== Infinity);
+    console.log('flatRois: ', flatRois)
 
     const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
+    console.log('top ROI: ', topROI)
 
     return topROI;
 }

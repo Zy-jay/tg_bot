@@ -239,7 +239,7 @@ ${formated.prelaunchCalls
     return `<b>🟩TOTAL CALLS </b> ${escapeHtmlEntities(tokenInfo.key_name)} - ${channelsDetails.length}
 
 <b>◽Название Токена:</b> ${escapeHtmlEntities(tokenInfo.name)} \n ${formated.prelaunchCalls[0] ? prelaunchText : "" 
-        } \n
+        }
 ${formated.result[0] ? launched : "\n"}
 <b>Адрес Токена:</b> <code href="#">${tokenInfo.address}</code>
 
@@ -251,7 +251,6 @@ ${socialLinks ? '<b>📱Соц.сети проекта: </b>' + socialLinks : ''
         }/${tokenInfo.address}">💠Dexview</a> | <a href="https://dexscreener.com/${tokenInfo.chain === "ether" ? "ethereum" : "bsc"
         }/${tokenInfo.address}">💠Dexscreener</a> | <a href="https://ave.ai/token/${tokenInfo.address
         }-${tokenInfo.chain === "ether" ? "eth" : "bsc"}">💠Ave</a> \n
-
 <b>Подпишись на ${TELEGRAM.CHANNEL} чтобы первым найти перспективные токены</b>
 `;
 }

@@ -332,9 +332,8 @@ async function getROITops() {
 
   const tokensInfo = (await pool.query(`SELECT * FROM tokens`)).rows;
   console.log("tokensInfo: ", tokensInfo);
+  const result = [];
   const ROIs = await sortedByTokens.map(async (calls) => {
-    const result = [];
-
     for (let index = 0; index < calls.length - 1; index++) {
       const call = calls[index];
 
@@ -358,21 +357,19 @@ async function getROITops() {
         call?.timestamp
       );
       console.log(call.ROI);
-    }
-    // console.log("result: ", result);
 
-    return result;
+      result.push(call);
+    }
+    console.log("result: ", result);
+
+    // return call;
   });
 
-  const flatRois = await (await ROIs)
-    .flat(Infinity)
-    .filter((e) => e.ROI !== Infinity);
-  console.log("flatRois: ", await flatRois);
+  const flatRois = await ROIs.flat(Infinity).filter((e) => e.ROI !== Infinity);
+  console.log("flatRois: ", flatRois);
 
-  const topROI = await (await flatRois)
-    .sort((a, b) => b.ROI - a.ROI)
-    .slice(0, 10);
-  console.log("top ROI: ", await topROI);
+  const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
+  console.log("top ROI: ", topROI);
 
   return topROI;
 }

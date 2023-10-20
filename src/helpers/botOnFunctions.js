@@ -333,7 +333,7 @@ async function getROITops() {
   const tokensInfo = (await pool.query(`SELECT * FROM tokens`)).rows;
   console.log("tokensInfo: ", tokensInfo);
   const result = [];
-  const ROIs = await sortedByTokens.map(async (calls) => {
+  await sortedByTokens.map(async (calls) => {
     for (let index = 0; index < calls.length - 1; index++) {
       const call = calls[index];
 
@@ -361,9 +361,11 @@ async function getROITops() {
         call?.timestamp
       );
       console.log(roi);
-      if (roi) {
+      if (roi && roi !== NaN) {
         call.ROI = roi;
         await sleep(500, call.ROI + " : " + roi);
+      } else {
+        continue;
       }
       //   console.log(call.ROI);
 
@@ -374,13 +376,13 @@ async function getROITops() {
     // return call;
   });
 
-  const flatRois = await ROIs.flat(Infinity).filter(
-    (e) => e.ROI !== Infinity || e.ROI !== NaN
-  );
-  console.log("flatRois: ", await flatRois);
+  const flatRois = result
+    .flat(Infinity)
+    .filter((e) => e.ROI !== Infinity || e.ROI !== NaN || e.ROI !== undefined);
+  console.log("flatRois: ", flatRois);
 
-  const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
-  console.log("top ROI: ", await topROI);
+  const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
+  console.log("top ROI: ", topROI);
 
   return topROI;
 }

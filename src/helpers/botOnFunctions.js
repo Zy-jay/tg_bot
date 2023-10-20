@@ -336,9 +336,9 @@ async function getROITops() {
     const result = [];
 
     for (let index = 0; index < calls.length; index++) {
-      const call = calls[index];
+      const call = await calls[index];
 
-      const maxMarketCup = calls
+      const maxMarketCup =  await calls
         .slice(index + 1, calls.length)
         .reduce((acc, cur) => {
           if (parseInt(cur.market_cap, 10) > acc) {
@@ -370,7 +370,12 @@ async function getROITops() {
 
   const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
   console.log("top ROI: ", await topROI.length);
-  topROI.map((r) => console.log(r));
+  topROI.map(async (r) =>
+    console.log(
+      await r,
+      t.then((res) => console.log(res))
+    )
+  );
   return topROI;
 }
 

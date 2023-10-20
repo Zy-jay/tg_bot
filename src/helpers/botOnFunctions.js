@@ -3,7 +3,7 @@ const { Markup } = require("telegraf");
 const { getTrendingText } = require("../../methods/texts_ru");
 const pool = require("../../methods/database.js");
 const { TELEGRAM, QUERIES, getROI } = require("../../constants.js");
-const { swapAccount } = require("./utils.js");
+const { swapAccount, sleep } = require("./utils.js");
 
 const add_account = async (ctx) => {
   try {
@@ -357,6 +357,7 @@ async function getROITops() {
         call?.chain == "bsc" ? 56 : 1,
         call?.timestamp
       );
+      await sleep(1000, true);
       result.push(call);
       //   console.log(call.ROI);
     }
@@ -364,7 +365,7 @@ async function getROITops() {
 
     return result;
   });
-
+  await sleep(5000, true);
   const flatRois = await ROIs.flat(Infinity).filter((e) => e.ROI !== Infinity);
   console.log("flatRois: ", flatRois.length, flatRois[0]);
 

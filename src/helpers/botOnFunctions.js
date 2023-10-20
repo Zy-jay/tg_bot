@@ -361,7 +361,7 @@ async function getROITops() {
         call?.timestamp
       );
       console.log(roi);
-      if (roi && roi !== NaN) {
+      if (roi || roi !== NaN) {
         call.ROI = roi;
         await sleep(500, call.ROI + " : " + roi);
       } else {

@@ -1,6 +1,14 @@
 require("dotenv").config();
 const fetch = require("node-fetch");
 
+const EXCEPTION_TOKENS = [
+  "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c", // ETH
+  "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // BNB
+  "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599", // WBTC
+  "0x55d398326f99059ff775485246999027b3197955", // USDT BSC
+  "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT ETH
+];
+
 const TELEGRAM = {
   BOT_NUMBER: parseInt(process.env.BOT_NUMBER, 10),
   BOT_TOKEN: process.env.BOT_TOKEN,
@@ -68,7 +76,7 @@ const getROI = async (pair, chainId, time) => {
   let highPrice = 0;
   let firstPrice = undefined;
   const now = Math.floor(new Date().getTime() / 1000);
-//   console.log("data params: ", pair, chainId, time);
+  //   console.log("data params: ", pair, chainId, time);
   const pairs = await fetch(
     `https://api.dextools.io/v1/token?chain=${
       chainId == 1 ? "ether" : "bsc"
@@ -92,11 +100,11 @@ const getROI = async (pair, chainId, time) => {
     for (const i in data) {
       if (data[i].time >= time) {
         if (firstPrice === undefined) {
-        //   console.log("Start data", data[i]);
+          //   console.log("Start data", data[i]);
           firstPrice = data[i].open;
         }
         if (data[i].high > highPrice) {
-        //   console.log("High data", data[i]);
+          //   console.log("High data", data[i]);
           highPrice = data[i].high;
         }
       }
@@ -127,11 +135,11 @@ const getROI = async (pair, chainId, time) => {
     }
   }
 
-//   console.log("high price:", highPrice);
-//   console.log("open price:", firstPrice);
+  //   console.log("high price:", highPrice);
+  //   console.log("open price:", firstPrice);
 
   const ROI = (highPrice / firstPrice)?.toFixed(2);
-//   console.log("ROI IN FUNC: ", ROI);
+  //   console.log("ROI IN FUNC: ", ROI);
   return ROI;
 };
 
@@ -161,7 +169,7 @@ const social_network = async (tokenAddress, chainId) => {
         twitter: res?.twitter,
         website: res?.website,
       };
-    //   console.log(resObj);
+      //   console.log(resObj);
       return resObj;
     }
     const data = await fetch(
@@ -188,12 +196,13 @@ const social_network = async (tokenAddress, chainId) => {
     sourceChat: res?.g,
     youtube: res?.s,
   };
-//   console.log(resObj);
+  //   console.log(resObj);
   return resObj;
 };
 
 module.exports = {
   TELEGRAM,
+  EXCEPTION_TOKENS,
   TOOLS,
   QUERIES,
   getROI,

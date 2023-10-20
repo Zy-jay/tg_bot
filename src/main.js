@@ -185,7 +185,6 @@ const Main = async () => {
     }
   }
 
-  setInterval(updateTops, 30 * 1000);
 
   bot.on("message", async (ctx) => {
     console.log(botWorking);

@@ -306,7 +306,6 @@ async function getROITops() {
       +new Date() - 1000 * 60 * 60 * 24,
     ])
   ).rows;
-  console.log("calls24: ", calls24.length);
 
   const sortedByTokens = calls24.reduce((acc, cur) => {
     const existingArrayIndex = acc.findIndex(
@@ -322,23 +321,19 @@ async function getROITops() {
     return acc;
   }, []);
 
-  console.log("sorted by tokens: ", sortedByTokens.length);
-
   for (const tokens of sortedByTokens) {
     tokens.sort(
       (a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10)
     );
   }
 
-  const tokensInfo = (await pool.query(`SELECT * FROM tokens`)).rows;
-  console.log("tokensInfo: ", tokensInfo.length);
-  const ROIs = await sortedByTokens.map(async (calls) => {
+  const ROIs = sortedByTokens.map((calls) => {
     const result = [];
 
     for (let index = 0; index < calls.length; index++) {
-      const call = await calls[index];
+      const call = calls[index];
 
-      const maxMarketCup = await calls
+      const maxMarketCup = calls
         .slice(index + 1, calls.length)
         .reduce((acc, cur) => {
           if (parseInt(cur.market_cap, 10) > acc) {
@@ -349,29 +344,19 @@ async function getROITops() {
         }, 0);
 
       call.maxMarketCupTest = maxMarketCup;
-
-      const token = tokensInfo.filter((token) => token.id == call.token_id)[0];
-      //   console.log(token);
-      call.ROI = await getROI(
-        token?.address,
-        call?.chain == "bsc" ? 56 : 1,
-        call?.timestamp
-      );
-      await sleep(1000, true);
-      result.push(call);
-      //   console.log(call.ROI);
+      call.ROI = maxMarketCup / (parseInt(call.market_cap, 10) || 0);
+      if (call.ROI > 1) {
+        result.push(call);
+      }
     }
-    // console.log("result: ", result.length);
 
     return result;
   });
-  await sleep(5000, true);
-  const flatRois = await ROIs.flat(Infinity).filter((e) => e.ROI !== Infinity);
-  console.log("flatRois: ", flatRois.length, flatRois[0]);
 
-  const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
-  console.log("top ROI: ", await topROI.length, topROI[0]);
-  topROI.map(async (r) => console.log(r));
+  const flatRois = ROIs.flat(Infinity).filter((e) => e.ROI !== Infinity);
+
+  const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 5);
+
   return topROI;
 }
 

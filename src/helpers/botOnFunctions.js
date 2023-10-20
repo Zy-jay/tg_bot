@@ -349,7 +349,7 @@ async function getROITops() {
 
       call.maxMarketCupTest = maxMarketCup;
 
-      const token = tokensInfo.find((token) => token.id === call.token_id);
+      const token = tokensInfo.find((token) => token.id == call.token_id);
       //   console.log(token);
       if (!token) {
         console.log("Токен не найден в БД, token_id= " + call.token_id);

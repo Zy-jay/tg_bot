@@ -338,7 +338,7 @@ async function getROITops() {
     for (let index = 0; index < calls.length; index++) {
       const call = await calls[index];
 
-      const maxMarketCup =  await calls
+      const maxMarketCup = await calls
         .slice(index + 1, calls.length)
         .reduce((acc, cur) => {
           if (parseInt(cur.market_cap, 10) > acc) {
@@ -366,10 +366,10 @@ async function getROITops() {
   });
 
   const flatRois = await ROIs.flat(Infinity).filter((e) => e.ROI !== Infinity);
-  console.log("flatRois: ", flatRois.length);
+  console.log("flatRois: ", flatRois.length, flatRois[0]);
 
   const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
-  console.log("top ROI: ", await topROI.length);
+  console.log("top ROI: ", await topROI.length, topROI[0]);
   topROI.map(async (r) =>
     console.log(
       await r,

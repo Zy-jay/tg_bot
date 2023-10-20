@@ -351,14 +351,14 @@ async function getROITops() {
       call.maxMarketCupTest = maxMarketCup;
 
       const token = tokensInfo.filter((token) => token.id == call.token_id)[0];
-      console.log(token);
+      //   console.log(token);
       call.ROI = await getROI(
         token?.address,
         call?.chain == "bsc" ? 56 : 1,
         call?.timestamp
       );
       result.push(call);
-      console.log(call.ROI);
+      //   console.log(call.ROI);
     }
     console.log("result: ", result.length);
 
@@ -370,7 +370,7 @@ async function getROITops() {
 
   const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
   console.log("top ROI: ", await topROI.length);
-
+  topROI.map((r) => console.log(r));
   return topROI;
 }
 

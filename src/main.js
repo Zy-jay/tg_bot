@@ -28,7 +28,8 @@ const app = express();
 
 const Main = async () => {
   let botWorking = false;
-
+  let updateTopsInterval = undefined;
+  const topsInterval = 3 * 60 * 1000;
   const bot = new Telegraf(TELEGRAM.BOT_TOKEN, {
     handlerTimeout: Infinity,
   });
@@ -261,6 +262,9 @@ const Main = async () => {
     }
 
     if (ctx?.message?.text === "/init_tops") {
+      if (updateTopsInterval) {
+        clearInterval(updateTopsInterval);
+      }
       try {
         await ctx.reply("wait...");
         const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo))
@@ -312,12 +316,18 @@ const Main = async () => {
         ]);
 
         await ctx.reply("Done!");
+        setTimeout(() => {
+          updateTopsInterval = setInterval(updateTops, topsInterval);
+        }, topsInterval);
       } catch (error) {
         console.log(error);
       }
     }
 
     if (ctx?.message?.text === "/uninit_tops") {
+      if (updateTopsInterval) {
+        clearInterval(updateTopsInterval);
+      }
       await uninit_tops(ctx, bot);
     }
 

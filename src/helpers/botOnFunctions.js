@@ -200,6 +200,7 @@ const init_tops = async (ctx, bot) => {
 };
 
 const uninit_tops = async (ctx, bot) => {
+  
   const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]
     ?.tops_message_id;
   if (currentTopsMessage) {

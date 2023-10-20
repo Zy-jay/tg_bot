@@ -349,15 +349,21 @@ async function getROITops() {
 
       call.maxMarketCupTest = maxMarketCup;
 
-      const token = tokensInfo.filter((token) => token.id == call.token_id)[0];
+      const token = tokensInfo.find((token) => token.id === call.token_id);
       //   console.log(token);
+      if (!token) {
+        console.log("Токен не найден в БД, token_id= " + call.token_id);
+        continue;
+      }
       call.ROI = await getROI(
         token?.address,
         call?.chain === "bsc" ? 56 : 1,
         call?.timestamp
       );
-      await sleep(500, call.ROI)
-    //   console.log(call.ROI);
+      if (await call.ROI) {
+        await sleep(500, call.ROI);
+      }
+      //   console.log(call.ROI);
 
       result.push(call);
     }
@@ -369,10 +375,10 @@ async function getROITops() {
   const flatRois = await ROIs.flat(Infinity).filter(
     (e) => e.ROI !== Infinity || e.ROI !== NaN
   );
-  console.log("flatRois: ", flatRois);
+  console.log("flatRois: ", await flatRois);
 
   const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
-  console.log("top ROI: ", topROI);
+  console.log("top ROI: ", await topROI);
 
   return topROI;
 }

@@ -22,6 +22,7 @@ const {
   getROITops,
   getTops,
 } = require("./helpers/botOnFunctions.js");
+const { sleep } = require("./helpers/utils.js");
 
 const app = express();
 
@@ -107,8 +108,8 @@ const Main = async () => {
     console.log("getting tops...");
     const tops = await getTops();
     const ROITops = await getROITops();
-    console.log("got tops");
-
+    console.log("got tops", ROITops);
+    await sleep(5000, "updateTops sleep");
     const topsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]
       ?.tops_message_id;
     console.log("tops messages:", topsMessage);
@@ -183,7 +184,7 @@ const Main = async () => {
     }
   }
 
-  setInterval(updateTops, 3 * 60 * 1000);
+  setInterval(updateTops, 30 * 1000);
 
   bot.on("message", async (ctx) => {
     console.log(botWorking);

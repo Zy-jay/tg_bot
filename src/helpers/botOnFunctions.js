@@ -371,12 +371,7 @@ async function getROITops() {
 
   const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
   console.log("top ROI: ", await topROI.length, topROI[0]);
-  topROI.map(async (r) =>
-    console.log(
-      await r,
-      t.then((res) => console.log(res))
-    )
-  );
+  topROI.map(async (r) => console.log(r));
   return topROI;
 }
 

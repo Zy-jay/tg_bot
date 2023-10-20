@@ -332,7 +332,7 @@ async function getROITops() {
 
   const tokensInfo = (await pool.query(`SELECT * FROM tokens`)).rows;
   console.log("tokensInfo: ", tokensInfo);
-  const ROIs = await  sortedByTokens.map(async (calls) => {
+  const ROIs = await sortedByTokens.map(async (calls) => {
     const result = [];
 
     for (let index = 0; index < calls.length - 1; index++) {
@@ -351,7 +351,7 @@ async function getROITops() {
       call.maxMarketCupTest = maxMarketCup;
 
       const token = tokensInfo.filter((token) => token.id == call.token_id)[0];
-      console.log(token);
+      //   console.log(token);
       call.ROI = await getROI(
         token?.address,
         call?.chain === "bsc" ? 56 : 1,
@@ -359,18 +359,20 @@ async function getROITops() {
       );
       console.log(call.ROI);
     }
-    console.log("result: ", result);
+    // console.log("result: ", result);
 
     return result;
   });
 
-  const flatRois = (await ROIs)
+  const flatRois = await (await ROIs)
     .flat(Infinity)
     .filter((e) => e.ROI !== Infinity);
-  console.log("flatRois: ", flatRois);
+  console.log("flatRois: ", await flatRois);
 
-  const topROI = (await flatRois).sort((a, b) => b.ROI - a.ROI).slice(0, 10);
-  console.log("top ROI: ", topROI);
+  const topROI = await (await flatRois)
+    .sort((a, b) => b.ROI - a.ROI)
+    .slice(0, 10);
+  console.log("top ROI: ", await topROI);
 
   return topROI;
 }

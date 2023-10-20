@@ -360,12 +360,14 @@ async function getROITops() {
 
       result.push(call);
     }
-    console.log("result: ", result);
+    // console.log("result: ", result);
 
     // return call;
   });
 
-  const flatRois = await ROIs.flat(Infinity).filter((e) => e.ROI !== Infinity);
+  const flatRois = await ROIs.flat(Infinity).filter(
+    (e) => e.ROI !== Infinity || e.ROI !== NaN
+  );
   console.log("flatRois: ", flatRois);
 
   const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);

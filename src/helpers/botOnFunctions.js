@@ -3,7 +3,7 @@ const { Markup } = require("telegraf");
 const { getTrendingText } = require("../../methods/texts_ru");
 const pool = require("../../methods/database.js");
 const { TELEGRAM, QUERIES, getROI } = require("../../constants.js");
-const { swapAccount, sleep } = require("./utils.js");
+const { swapAccount } = require("./utils.js");
 
 const add_account = async (ctx) => {
   try {
@@ -306,7 +306,7 @@ async function getROITops() {
       +new Date() - 1000 * 60 * 60 * 24,
     ])
   ).rows;
-  console.log("calls24: ", calls24);
+  console.log("calls24: ", calls24.length);
 
   const sortedByTokens = calls24.reduce((acc, cur) => {
     const existingArrayIndex = acc.findIndex(
@@ -322,7 +322,7 @@ async function getROITops() {
     return acc;
   }, []);
 
-  console.log("sorted by tokens: ", sortedByTokens);
+  console.log("sorted by tokens: ", sortedByTokens.length);
 
   for (const tokens of sortedByTokens) {
     tokens.sort(
@@ -331,10 +331,11 @@ async function getROITops() {
   }
 
   const tokensInfo = (await pool.query(`SELECT * FROM tokens`)).rows;
-  console.log("tokensInfo: ", tokensInfo);
-  const result = [];
-  await sortedByTokens.map(async (calls) => {
-    for (let index = 0; index < calls.length - 1; index++) {
+  console.log("tokensInfo: ", tokensInfo.length);
+  const ROIs = await sortedByTokens.map(async (calls) => {
+    const result = [];
+
+    for (let index = 0; index < calls.length; index++) {
       const call = calls[index];
 
       const maxMarketCup = calls
@@ -349,39 +350,26 @@ async function getROITops() {
 
       call.maxMarketCupTest = maxMarketCup;
 
-      const token = tokensInfo.find((token) => token.id == call.token_id);
-      //   console.log(token);
-      if (!token) {
-        console.log("Токен не найден в БД, token_id= " + call.token_id);
-        continue;
-      }
-      const roi = await getROI(
+      const token = tokensInfo.filter((token) => token.id == call.token_id)[0];
+      console.log(token);
+      call.ROI = await getROI(
         token?.address,
-        call?.chain === "bsc" ? 56 : 1,
+        call?.chain == "bsc" ? 56 : 1,
         call?.timestamp
       );
-      console.log(roi);
-      if (roi || roi !== "undefined" || roi !== "NaN") {
-        call.ROI = roi;
-        await sleep(500, call.ROI + " : " + roi);
-        result.push(call);
-      } else {
-        continue;
-      }
-      //   console.log(call.ROI);
+      result.push(call);
+      console.log(call.ROI);
     }
-    // console.log("result: ", result);
+    console.log("result: ", result.length);
 
-    // return call;
+    return result;
   });
-  console.log("result", result);
-  const flatRois = result
-    .flat(Infinity)
-    .filter((e) => e.ROI !== Infinity || e.ROI !== NaN || e.ROI !== undefined);
-  console.log("flatRois: ", flatRois);
 
-  const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
-  console.log("top ROI: ", topROI);
+  const flatRois = await ROIs.flat(Infinity).filter((e) => e.ROI !== Infinity);
+  console.log("flatRois: ", flatRois.length);
+
+  const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
+  console.log("top ROI: ", await topROI.length);
 
   return topROI;
 }

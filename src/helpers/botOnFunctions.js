@@ -361,21 +361,20 @@ async function getROITops() {
         call?.timestamp
       );
       console.log(roi);
-      if (roi || roi !== NaN) {
+      if (roi || roi !== "undefined" || roi !== "NaN") {
         call.ROI = roi;
         await sleep(500, call.ROI + " : " + roi);
+        result.push(call);
       } else {
         continue;
       }
       //   console.log(call.ROI);
-
-      result.push(call);
     }
     // console.log("result: ", result);
 
     // return call;
   });
-
+  console.log("result", result);
   const flatRois = result
     .flat(Infinity)
     .filter((e) => e.ROI !== Infinity || e.ROI !== NaN || e.ROI !== undefined);

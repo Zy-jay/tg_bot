@@ -355,13 +355,15 @@ async function getROITops() {
         console.log("Токен не найден в БД, token_id= " + call.token_id);
         continue;
       }
-      call.ROI = await getROI(
+      const roi = await getROI(
         token?.address,
         call?.chain === "bsc" ? 56 : 1,
         call?.timestamp
       );
-      if (await call.ROI) {
-        await sleep(500, call.ROI);
+      console.log(roi);
+      if (roi) {
+        call.ROI = roi;
+        await sleep(500, call.ROI + " : " + roi);
       }
       //   console.log(call.ROI);
 

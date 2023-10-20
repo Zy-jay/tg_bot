@@ -85,7 +85,7 @@ const getROI = async (pair, chainId, time) => {
       `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=1S&chainId=${chainId}`
     ).then((res) => res.json());
     // console.log("data: ", data);
-    if (!data?.history) return "нет данных";
+    if (!data?.history) return undefined;
 
     data = data.history;
 
@@ -111,7 +111,7 @@ const getROI = async (pair, chainId, time) => {
     `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pairs?.data?.pairs[0]?.address}?from=${time}&to=${now}&interval=1S&chainId=${chainId}`
   ).then((res) => res.json());
   //   console.log("data: ", data);
-  if (!data.history) return "нет данных";
+  if (!data.history) return undefined;
 
   data = data.history;
   for (const i in data) {

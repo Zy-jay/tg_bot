@@ -274,7 +274,7 @@ const Main = async () => {
     process.once('SIGINT', () => bot.stop('SIGINT'));
     process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
-    await new Promise(r => setTimeout(r, 2000));
+    // await new Promise(r => setTimeout(r, 2000));
     botWorking = true;
 }
 

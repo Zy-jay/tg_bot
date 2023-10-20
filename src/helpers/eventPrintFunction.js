@@ -5,7 +5,7 @@ const { getTotalText, getFirstCallText, getUpdateText, getTrendingText, getPreCa
 const pool = require('../../methods/database.js');
 const { TELEGRAM, TOOLS, QUERIES, getROI } = require('../../constants');
 const { getTokenData } = require('./utils.js');
-const { getTops, getROITops } = require('./botOnFunctions');
+// const { getTops, getROITops } = require('./botOnFunctions');
 
 async function eventPrint(event, bot) {
     try {

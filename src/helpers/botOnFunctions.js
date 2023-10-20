@@ -3,7 +3,7 @@ const { Markup } = require("telegraf");
 const { getTrendingText } = require("../../methods/texts_ru");
 const pool = require("../../methods/database.js");
 const { TELEGRAM, QUERIES, getROI } = require("../../constants.js");
-const { swapAccount } = require("./utils.js");
+const { swapAccount, sleep } = require("./utils.js");
 
 const add_account = async (ctx) => {
   try {
@@ -356,7 +356,8 @@ async function getROITops() {
         call?.chain === "bsc" ? 56 : 1,
         call?.timestamp
       );
-      console.log(call.ROI);
+      await sleep(500, call.ROI)
+    //   console.log(call.ROI);
 
       result.push(call);
     }

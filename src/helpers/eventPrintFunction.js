@@ -34,11 +34,11 @@ async function eventPrint(event, bot) {
         console.log('messageText: ', mixedText);
         console.log('tg url: ', tgUrl);
         console.log('twitter url: ', twitterUrl);
-        const matches = [...new Set(mixedText.match(regex) || [])].filter(e => e !== '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2' && e !== '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c');
+        const matches = [...new Set(mixedText.match(regex) || [])].filter(e => e.toLowerCase() !== '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'.toLowerCase() && e.toLowerCase() !== '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'.toLowerCase());
         console.log('matches:', matches);
 
         for (const iterator of matches) {
-            if (iterator == "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2" || iterator == '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c') continue;
+            if (iterator?.toLowerCase() === "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2".toLowerCase() || iterator?.toLowerCase() === '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c'.toLowerCase()) continue;
             const tokenData = await (async () => {
 
                 // try to get ETH pair

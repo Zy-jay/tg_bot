@@ -281,10 +281,10 @@ async function getROITops() {
         return result;
     });
 
-    const flatRois = ROIs.flat(Infinity).filter(e => e.ROI !== Infinity);
+    const flatRois = await ROIs.flat(Infinity).filter(e => e.ROI !== Infinity);
     console.log('flatRois: ', flatRois)
 
-    const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
+    const topROI = await flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 10);
     console.log('top ROI: ', topROI)
 
     return topROI;

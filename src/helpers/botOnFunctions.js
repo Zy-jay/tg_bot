@@ -360,7 +360,7 @@ async function getROITops() {
       result.push(call);
       //   console.log(call.ROI);
     }
-    console.log("result: ", result.length);
+    // console.log("result: ", result.length);
 
     return result;
   });

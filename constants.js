@@ -7,6 +7,7 @@ const EXCEPTION_TOKENS = [
   "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599", // WBTC
   "0x55d398326f99059ff775485246999027b3197955", // USDT BSC
   "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT ETH
+  "0x0000000000000000000000000000000000000000",
 ];
 
 const TELEGRAM = {
@@ -90,7 +91,7 @@ const getROI = async (pair, chainId, time) => {
   if (pairs.errorCode) {
     // console.log(pairs);
     let data = await fetch(
-      `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=1S&chainId=${chainId}`
+      `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pair}?from=${time}&to=${now}&interval=1&chainId=${chainId}`
     ).then((res) => res.json());
     // console.log("data: ", data);
     if (!data?.history) return undefined;
@@ -116,7 +117,7 @@ const getROI = async (pair, chainId, time) => {
     return ROI;
   }
   let data = await fetch(
-    `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pairs?.data?.pairs[0]?.address}?from=${time}&to=${now}&interval=1S&chainId=${chainId}`
+    `https://dex-api-production.up.railway.app/v1/dex/candles/history/${pairs?.data?.pairs[0]?.address}?from=${time}&to=${now}&interval=1&chainId=${chainId}`
   ).then((res) => res.json());
   //   console.log("data: ", data);
   if (!data.history) return undefined;

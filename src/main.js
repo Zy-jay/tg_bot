@@ -110,7 +110,7 @@ const Main = async () => {
     const tops = await getTops();
     const ROITops = await getROITops();
     console.log("got tops", ROITops);
-    await sleep(5000, "updateTops sleep");
+    // await sleep(5000, "updateTops sleep");
     const topsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]
       ?.tops_message_id;
     console.log("tops messages:", topsMessage);

@@ -330,7 +330,7 @@ async function getROITops() {
 
   const DB_tokens = (await pool.query('SELECT * FROM tokens')).rows;
 
-  const ROIs = sortedByTokens.map((calls) => {
+  const ROIs = sortedByTokens.map(async (calls) => {
     const result = [];
 
     for (let index = 0; index < calls.length; index++) {

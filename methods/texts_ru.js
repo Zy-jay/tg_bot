@@ -433,7 +433,7 @@ async function getUpdateText(
 
 function getTrendingText(tops, ROITops) {
   console.log("ROITops", ROITops[0]);
-  return `<b>🟢ВЫЗОВЫ В ТРЕНДЕ (LIVE)</b> 
+  return `<b>🟢CALL TRENDING (LIVE)</b> 
 
 ${
   tops[0]
@@ -446,7 +446,7 @@ ${
               e.tokenData.key_name
             )}</a>♻️ <a href="https://t.me/${TELEGRAM.CHANNEL.split("@")[1]}/${
               e.tokenData.total_message_id
-            }">${e.count} Вызовы</a> \n`
+            }">${e.count} calls</a> \n`
         )
         .join("")
     : "[ там пока ничего нет ]"

@@ -79,8 +79,7 @@ const getROI = async (pair, chainId, time) => {
   const now = Math.floor(new Date().getTime() / 1000);
   //   console.log("data params: ", pair, chainId, time);
   const pairs = await fetch(
-    `https://api.dextools.io/v1/token?chain=${
-      chainId == 1 ? "ether" : "bsc"
+    `https://api.dextools.io/v1/token?chain=${chainId == 1 ? "ether" : "bsc"
     }&address=${pair}&page=0&pageSize=20`,
     {
       headers: {
@@ -150,8 +149,7 @@ const social_network = async (tokenAddress, chainId) => {
   ).then((res) => res.json());
   if (data.error || !data.poolDetails) {
     const pairs = await fetch(
-      `https://api.dextools.io/v1/token?chain=${
-        chainId == 1 ? "ether" : "bsc"
+      `https://api.dextools.io/v1/token?chain=${chainId == 1 ? "ether" : "bsc"
       }&address=${tokenAddress}&page=0&pageSize=20`,
       {
         headers: {

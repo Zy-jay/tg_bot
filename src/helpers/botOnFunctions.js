@@ -200,7 +200,7 @@ const init_tops = async (ctx, bot) => {
 };
 
 const uninit_tops = async (ctx, bot) => {
-  
+
   const currentTopsMessage = (await pool.query(QUERIES.getGeneralInfo)).rows[0]
     ?.tops_message_id;
   if (currentTopsMessage) {
@@ -328,6 +328,8 @@ async function getROITops() {
     );
   }
 
+  const DB_tokens = (await pool.query('SELECT * FROM tokens')).rows;
+
   const ROIs = sortedByTokens.map((calls) => {
     const result = [];
 
@@ -344,9 +346,13 @@ async function getROITops() {
           }
         }, 0);
 
+      const tokenAddress = DB_tokens.filter(el => el.id == call.token_id)[0];
+
       call.maxMarketCupTest = maxMarketCup;
       call.ROI = maxMarketCup / (parseInt(call.market_cap, 10) || 0);
-      if (call.ROI > 1) {
+      if (call.ROI > 1 && result.length < 10) {
+        const r = await getROI(tokenAddress.address, tokenAddress?.chain == 'bsc' ? 56 : 1, call.timestamp);
+        call.ROI = r;
         result.push(call);
       }
     }

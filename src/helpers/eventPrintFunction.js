@@ -140,7 +140,7 @@ async function eventPrint(event, bot) {
 
       const tokenInfo =
         tokenData?.tokenData?.data?.address &&
-        checkAddrIsBlackList(tokenData?.tokenData?.data?.address)
+        !checkAddrIsBlackList(tokenData?.tokenData?.data?.address)
           ? {
               name: tokenData?.tokenData?.data?.name || "",
               key_name: "$" + tokenData?.tokenData?.data?.symbol || "",

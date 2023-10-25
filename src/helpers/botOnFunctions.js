@@ -308,63 +308,74 @@ async function getROITops() {
     ])
   ).rows;
 
-  const sortedByTokens = calls24.reduce((acc, cur) => {
-    const existingArrayIndex = acc.findIndex(
-      (subarray) => subarray[0]?.address === cur.address
-    );
+  // const sortedByTokens = calls24.reduce((acc, cur) => {
+  //   const existingArrayIndex = acc.findIndex(
+  //     (subarray) => subarray[0]?.address === cur.address
+  //   );
 
-    if (existingArrayIndex === -1) {
-      acc.push([cur]);
-    } else {
-      acc[existingArrayIndex].push(cur);
-    }
+  //   if (existingArrayIndex === -1) {
+  //     acc.push([cur]);
+  //   } else {
+  //     acc[existingArrayIndex].push(cur);
+  //   }
 
-    return acc;
-  }, []);
+  //   return acc;
+  // }, []);
 
-  for (const tokens of sortedByTokens) {
-    tokens.sort(
-      (a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10)
-    );
-  }
-
-  const DB_tokens = (await pool.query('SELECT * FROM tokens')).rows;
-
-  const ROIs = sortedByTokens.map(async (calls) => {
-    const result = [];
-
-    for (let index = 0; index < calls.length; index++) {
-      const call = calls[index];
-
-      const maxMarketCup = calls
-        .slice(index + 1, calls.length)
-        .reduce((acc, cur) => {
-          if (parseInt(cur.market_cap, 10) > acc) {
-            return parseInt(cur.market_cap, 10);
-          } else {
-            return acc;
-          }
-        }, 0);
-
-      const tokenAddress = DB_tokens.filter(el => el.id == call.token_id)[0];
-
-      call.maxMarketCupTest = maxMarketCup;
-      call.ROI = maxMarketCup / (parseInt(call.market_cap, 10) || 0);
-      if (call.ROI > 1 && result.length < 10) {
-        const r = await getROI(tokenAddress.address, tokenAddress?.chain == 'bsc' ? 56 : 1, call.timestamp);
-        call.ROI = r;
-        result.push(call);
+  const result = calls24.sort((a, b) => {
+      if (a?.roi > b?.roi) {
+        return -1;
       }
-    }
-
-    return result;
+      if (a.a < b.a) {
+        return 1;
+      }
+      return 0;
   });
 
-  const flatRois = ROIs.flat(Infinity).filter((e) => e.ROI !== Infinity);
 
-  const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 5);
+  // for (const tokens of sortedByTokens) {
+  //   tokens.sort(
+  //     (a, b) => parseInt(a.timestamp, 10) - parseInt(b.timestamp, 10)
+  //   );
+  // }
 
-  return topROI;
+  // const DB_tokens = (await pool.query('SELECT * FROM tokens')).rows;
+
+  // const ROIs = sortedByTokens.map(async (calls) => {
+  //   const result = [];
+
+  //   for (let index = 0; index < calls.length; index++) {
+  //     const call = calls[index];
+
+  //     const maxMarketCup = calls
+  //       .slice(index + 1, calls.length)
+  //       .reduce((acc, cur) => {
+  //         if (parseInt(cur.market_cap, 10) > acc) {
+  //           return parseInt(cur.market_cap, 10);
+  //         } else {
+  //           return acc;
+  //         }
+  //       }, 0);
+
+  //     const tokenAddress = DB_tokens.filter(el => el.id == call.token_id)[0];
+
+  //     call.maxMarketCupTest = maxMarketCup;
+  //     call.ROI = maxMarketCup / (parseInt(call.market_cap, 10) || 0);
+  //     if (call.ROI > 1 && result.length < 10) {
+  //       const r = await getROI(tokenAddress.address, tokenAddress?.chain == 'bsc' ? 56 : 1, call.timestamp);
+  //       call.ROI = r;
+  //       result.push(call);
+  //     }
+    // }
+
+  //   return result;
+  // });
+
+  // const flatRois = ROIs.flat(Infinity).filter((e) => e.ROI !== Infinity);
+
+  // const topROI = flatRois.sort((a, b) => b.ROI - a.ROI).slice(0, 5);
+
+  return result;
 }
 
 module.exports = {

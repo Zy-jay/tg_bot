@@ -1,5 +1,6 @@
 require("dotenv").config();
 const fetch = require("node-fetch");
+const pool = require("./methods/database");
 
 const EXCEPTION_TOKENS = [
   "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c", // ETH
@@ -73,6 +74,7 @@ const QUERIES = {
 };
 
 const getROI = async (pair, chainId, time) => {
+  const timestamp = time;
   time = (time / 1000)?.toFixed(0);
   let highPrice = 0;
   let firstPrice = undefined;
@@ -113,6 +115,7 @@ const getROI = async (pair, chainId, time) => {
     // console.log("open price:", firstPrice);
     const ROI = (highPrice / firstPrice)?.toFixed(2);
     // console.log("ROI IN FUNC: ", ROI);
+    await pool.query('UPDATE calls SET roi = $1 WHERE timestamp = $2', [ROI, timestamp]);
     return ROI;
   }
   let data = await fetch(
@@ -139,6 +142,7 @@ const getROI = async (pair, chainId, time) => {
   //   console.log("open price:", firstPrice);
 
   const ROI = (highPrice / firstPrice)?.toFixed(2);
+  await pool.query('UPDATE calls SET roi = $1 WHERE timestamp = $2', [ROI, timestamp]);
   //   console.log("ROI IN FUNC: ", ROI);
   return ROI;
 };

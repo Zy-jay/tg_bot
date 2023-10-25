@@ -3,6 +3,7 @@ const { TELEGRAM, TOOLS, QUERIES } = require("../../constants.js");
 const fetch = require("node-fetch");
 const pool = require("../../methods/database.js");
 const { exec } = require("child_process");
+const { EXCEPTION_TOKENS } = require("../../constants.js");
 
 async function getTokenData(poolAddress) {
   // chaniID doesn't matter in this request
@@ -117,14 +118,14 @@ const sleep = async (ms, msg) => {
     setTimeout(resolve, ms);
   });
 };
- function checkAddress(address) {
+function checkAddress(address) {
   if (!address || address.length !== 42 || address.substring(0, 2) !== "0x") {
     return false;
   } else {
     return true;
   }
 }
- function checkAddrIsBlackList(address) {
+function checkAddrIsBlackList(address) {
   if (!checkAddress(address)) {
     return true;
   }

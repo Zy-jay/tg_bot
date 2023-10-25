@@ -119,7 +119,6 @@ async function eventPrint(event, bot) {
           return { bscTokenData: bscTokenData, bscPairData: bscPairData };
 
         console.log("no token data found");
-
         console.log(tokenData);
         console.log(bscTokenData);
       })();

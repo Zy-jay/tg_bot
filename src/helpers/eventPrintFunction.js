@@ -16,7 +16,7 @@ const {
   getROI,
   EXCEPTION_TOKENS,
 } = require("../../constants");
-const { getTokenData } = require("./utils.js");
+const { getTokenData, checkAddrIsBlackList } = require("./utils.js");
 // const { getTops, getROITops } = require('./botOnFunctions');
 
 async function eventPrint(event, bot) {
@@ -60,11 +60,7 @@ async function eventPrint(event, bot) {
     console.log("matches:", matches);
 
     for (const iterator of matches) {
-      if (
-        EXCEPTION_TOKENS.find(
-          (address) => address.toLowerCase() === iterator.toLowerCase()
-        )
-      ) {
+      if (checkAddrIsBlackList(iterator)) {
         continue;
       }
       const tokenData = await (async () => {
@@ -138,12 +134,14 @@ async function eventPrint(event, bot) {
 
       if (!tokenData && !tokenDataDexView) continue;
 
-      const pairAddress =
-        tokenData?.bscPairData != undefined
-          ? tokenData?.bscPairData?.data?.token?.address
-          : tokenData?.pairData?.data?.token?.address;
+      // const pairAddress =
+      //   tokenData?.bscPairData != undefined
+      //     ? tokenData?.bscPairData?.data?.token?.address
+      //     : tokenData?.pairData?.data?.token?.address;
 
-      const tokenInfo = tokenData?.tokenData?.data?.address
+      const tokenInfo = tokenData?.tokenData?.data?.address && checkAddrIsBlackList(
+        tokenData?.tokenData?.data?.address
+      )
         ? {
             name: tokenData?.tokenData?.data?.name || "",
             key_name: "$" + tokenData?.tokenData?.data?.symbol || "",
@@ -154,24 +152,18 @@ async function eventPrint(event, bot) {
             chain: tokenData?.tokenData?.data?.chain || "ether",
             pairs: tokenData?.tokenData?.data?.pairs || [],
           }
-        : {
+        : tokenDataDexView
+        ? {
             name:
               tokenDataDexView.token0Name ||
-              tokenDataDexView.baseTokenName ||
+              // tokenDataDexView.baseTokenName ||
               "",
-            key_name:
-              "$" +
-              (tokenDataDexView?.token0Symbol ||
-                tokenDataDexView?.baseTokenSymbol ||
-                ""),
-            address: (
-              tokenDataDexView.token0 ||
-              tokenDataDexView.baseToken ||
-              ""
-            ).toLowerCase(),
+            key_name: "$" + (tokenDataDexView?.token0Symbol || ""),
+            address: (tokenDataDexView.token0 || "").toLowerCase(),
             market_cap: parseInt(tokenDataDexView.fdv, 10) || 0,
             chain: tokenDataDexView.chatId === "1" ? "ether" : "bsc",
-          };
+          }
+        : undefined;
 
       if (!tokenInfo?.market_cap && tokenInfo?.market_cap !== 0) {
         delete tokenInfo.market_cap;

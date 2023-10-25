@@ -117,14 +117,14 @@ const sleep = async (ms, msg) => {
     setTimeout(resolve, ms);
   });
 };
-export function checkAddress(address) {
+ function checkAddress(address) {
   if (!address || address.length !== 42 || address.substring(0, 2) !== "0x") {
     return false;
   } else {
     return true;
   }
 }
-export function checkAddrIsBlackList(address) {
+ function checkAddrIsBlackList(address) {
   if (!checkAddress(address)) {
     return true;
   }
@@ -140,5 +140,6 @@ module.exports = {
   reloadScript,
   swapAccount,
   swapToNextAccount,
+  checkAddrIsBlackList,
   sleep,
 };

@@ -130,7 +130,7 @@ function checkAddrIsBlackList(address) {
     return true;
   }
   return EXCEPTION_TOKENS.find(
-    (address) => address.toLowerCase() === iterator.toLowerCase()
+    (addr) => addr.toLowerCase() === address.toLowerCase()
   )
     ? true
     : false;

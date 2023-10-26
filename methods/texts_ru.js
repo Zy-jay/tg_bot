@@ -451,24 +451,23 @@ ${
         .join("")
     : "[ там пока ничего нет ]"
 }
-
+  
 <b>🟢Top Calls Channels (Max ROI Daily)</b> 
 
 ${
-  ROITops[0]?.sort((a, b) => b.roi - a.roi)
-    ? ROITops.slice(0, 10)
-        .map(
-          (e, i) =>{
-            console.log("e:", e);
-            return `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(
-              e.link
-            )}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${
-              process.env.TELEGRAM_CHANNEL.split("@")[1]
-            }/${e.total_message_id}">Total Calls (${escapeHtmlEntities(
-              e.key_name
-            )})</a> <b>X${parseFloat(e.roi)}</b> 🔹\n`
-          }
-        )
+  ROITops.length
+    ? ROITops.sort((a, b) => b.roi - a.roi)
+        .slice(0, 10)
+        .map((e, i) => {
+          console.log("e:", e);
+          return `${i + 1}. <a href="https://t.me/${escapeHtmlEntities(
+            e.link
+          )}">${escapeHtmlEntities(e.name)}</a>: <a href="https://t.me/${
+            process.env.TELEGRAM_CHANNEL.split("@")[1]
+          }/${e.total_message_id}">Total Calls (${escapeHtmlEntities(
+            e.key_name
+          )})</a> <b>X${parseFloat(e.roi)}</b> 🔹\n`;
+        })
         .join("")
     : "[ тут пока ничего нет ]"
 }

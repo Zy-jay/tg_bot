@@ -302,7 +302,7 @@ async function getTops() {
 }
 
 async function getROITops() {
-  const calls24 = (
+  let calls24 = (
     await pool.query(QUERIES.getCallDetailsByTimestamp, [
       +new Date() - 1000 * 60 * 60 * 24,
     ])
@@ -322,7 +322,8 @@ async function getROITops() {
 
   //   return acc;
   // }, []);
-
+  
+  calls24 = calls24.filter(el => !isNaN(el.roi));
   const result = calls24.sort((a, b) => {
       if (a?.roi > b?.roi) {
         return -1;
@@ -332,6 +333,7 @@ async function getROITops() {
       }
       return 0;
   });
+
 
 
   // for (const tokens of sortedByTokens) {

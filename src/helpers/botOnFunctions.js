@@ -303,7 +303,7 @@ async function getTops() {
 
 async function getROITops() {
   const calls24 = (
-    await pool.query(QUERIES.getCallDetailsByTimestamp, [
+    await pool.query(`SELECT * FROM calls WHERE timestamp > $1`, [
       +new Date() - 1000 * 60 * 60 * 24,
     ])
   ).rows;

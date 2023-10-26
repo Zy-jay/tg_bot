@@ -465,7 +465,7 @@ ${
               process.env.TELEGRAM_CHANNEL.split("@")[1]
             }/${e.total_message_id}">Total Calls (${escapeHtmlEntities(
               e.key_name
-            )})</a> <b>X${parseFloat(e.ROI?.toFixed(2))}</b> 🔹\n`
+            )})</a> <b>X${parseFloat(e.roi?.toFixed(2))}</b> 🔹\n`
         )
         .join("")
     : "[ тут пока ничего нет ]"

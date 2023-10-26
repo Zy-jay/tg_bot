@@ -303,10 +303,11 @@ async function getTops() {
 
 async function getROITops() {
   const calls24 = (
-    await pool.query(`SELECT * FROM calls WHERE timestamp > $1`, [
+    await pool.query(QUERIES.getCallDetailsByTimestamp, [
       +new Date() - 1000 * 60 * 60 * 24,
     ])
   ).rows;
+  console.log('------------------calls: '. calls24);
 
   // const sortedByTokens = calls24.reduce((acc, cur) => {
   //   const existingArrayIndex = acc.findIndex(

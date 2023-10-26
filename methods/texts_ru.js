@@ -433,6 +433,8 @@ async function getUpdateText(
 
 function getTrendingText(tops, ROITops) {
   console.log("ROITops", ROITops[0]);
+  console.log('---------is big: '. ROITops[0]?.ROI);
+  console.log('---------is small: ', ROITops[0]?.roi)
   return `<b>🟢CALL TRENDING (LIVE)</b> 
 
 ${

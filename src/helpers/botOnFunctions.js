@@ -328,7 +328,7 @@ async function getROITops() {
       if (a?.roi > b?.roi) {
         return -1;
       }
-      if (a.a < b.a) {
+      if (a?.roi < b?.roi) {
         return 1;
       }
       return 0;

@@ -455,7 +455,7 @@ ${
 <b>🟢Top Calls Channels (Max ROI Daily)</b> 
 
 ${
-  ROITops[0]
+  ROITops[0]?.sort((a, b) => b.roi - a.roi)
     ? ROITops.slice(0, 10)
         .map(
           (e, i) =>{
